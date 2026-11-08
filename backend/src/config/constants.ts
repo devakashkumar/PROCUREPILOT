@@ -59,7 +59,7 @@ export const STRATEGY_WEIGHTS: Record<
     stockConfidence: number;
   }
 > = {
-  cheapest: { price: 0.75, reliability: 0.1, delivery: 0.1, stockConfidence: 0.05 },
+  cheapest: { price: 0.9, reliability: 0.04, delivery: 0.04, stockConfidence: 0.02 },
   reliable: { price: 0.15, reliability: 0.65, delivery: 0.1, stockConfidence: 0.1 },
   balanced: { price: 0.4, reliability: 0.35, delivery: 0.15, stockConfidence: 0.1 },
   fastest: { price: 0.15, reliability: 0.2, delivery: 0.6, stockConfidence: 0.05 },
