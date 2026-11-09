@@ -1,5 +1,5 @@
 import { Product, IProduct } from "../../models/Product.js";
-import { SupplierOffer, ISupplierOffer } from "../../models/SupplierOffer.js";
+import { SupplierOffer } from "../../models/SupplierOffer.js";
 import { ISupplier } from "../../models/Supplier.js";
 import { IProcurementItemRequirement } from "../../models/ProcurementRequest.js";
 
@@ -89,7 +89,10 @@ export function computeTokenOverlapScore(
   return score;
 }
 
-export function calculateEffectiveUnitPrice(offer: ISupplierOffer, quantity: number): {
+export function calculateEffectiveUnitPrice(
+  offer: { pricePaise: number; bulkTiers?: Array<{ minQty: number; pricePaise: number }> },
+  quantity: number
+): {
   unitPricePaise: number;
   appliedBulkTier: boolean;
 } {
