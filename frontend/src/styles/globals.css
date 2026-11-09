@@ -1,0 +1,161 @@
+@import "@fontsource-variable/plus-jakarta-sans";
+@import "@fontsource-variable/jetbrains-mono";
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: "Plus Jakarta Sans Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: "JetBrains Mono Variable", monospace;
+
+    /* Light Theme (Section 5.2) */
+    --background: #FAFAF7;
+    --surface: #FFFFFF;
+    --ink: #0A0A0A;
+    --muted: #6B6B66;
+    --border: #E8E8E2;
+    --subtle: #F2F2EC;
+
+    /* Accent & Semantics */
+    --accent: #C8FF2E;
+    --accent-ink: #0A0A0A;
+    --success: #16A34A;
+    --warning: #F59E0B;
+    --danger: #E5484D;
+    --info: #2F5BFF;
+
+    /* Radii */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+  }
+
+  .dark {
+    /* Dark Theme (Section 5.2) */
+    --background: #0A0A0A;
+    --surface: #111111;
+    --ink: #FAFAF7;
+    --muted: #8A8A84;
+    --border: #232323;
+    --subtle: #161616;
+
+    --accent: #C8FF2E;
+    --accent-ink: #0A0A0A;
+    --success: #16A34A;
+    --warning: #F59E0B;
+    --danger: #E5484D;
+    --info: #2F5BFF;
+  }
+
+  * {
+    border-color: var(--border);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    letter-spacing: -0.015em;
+    overflow-x: hidden;
+  }
+
+  /* Mono font strictly for numbers, IDs, and order numbers */
+  .font-mono,
+  .tabular-nums {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Typography Scale (Section 5.2) */
+.font-display {
+  font-family: var(--font-sans);
+  font-size: clamp(2.75rem, 6vw, 5.5rem);
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+}
+
+.font-h1 {
+  font-family: var(--font-sans);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.font-h2 {
+  font-family: var(--font-sans);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  line-height: 1.12;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.font-h3 {
+  font-family: var(--font-sans);
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  line-height: 1.25;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.font-body {
+  font-size: 1rem;
+  line-height: 1.625;
+  font-weight: 500;
+}
+
+.font-small {
+  font-size: 0.875rem;
+  line-height: 1.375;
+  font-weight: 600;
+}
+
+.font-micro {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Custom razor-sharp card styles (Section 5.2) */
+.card-sharp {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s ease;
+}
+
+.card-sharp:hover {
+  border-color: var(--ink);
+  transform: translateY(-2px);
+}
+
+/* Focus outline */
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.dark :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
