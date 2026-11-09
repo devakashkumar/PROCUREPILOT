@@ -194,21 +194,6 @@ To use real cloud services:
 
 ---
 
-### Running on Mobile / Local Network (LAN Access)
-
-The frontend Vite server is configured to bind to `host: "0.0.0.0"`. This allows any smartphone, tablet, or secondary laptop on the **same Wi-Fi network** to access the full application without setting up tunnels or modifying firewalls.
-
-1. Find your machine's local IP address:
-   - **Linux / macOS**: `ip -4 addr show` or `ifconfig` (look for `192.168.x.x` or `10.x.x.x`)
-   - **Windows**: `ipconfig` (IPv4 Address under Wireless LAN adapter)
-2. On your phone (connected to same Wi-Fi), open the browser and navigate to:
-   ```
-   http://<YOUR_LOCAL_IP>:5173
-   ```
-   *(e.g., `http://192.168.52.159:5173`)*
-3. All requests to `/api/*` are automatically proxied through Vite to the backend on port 5000, eliminating CORS issues.
-
----
 
 ### Running over the Public Internet (Worldwide Access)
 
