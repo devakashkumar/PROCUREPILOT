@@ -2,6 +2,8 @@ import { createApp } from "./app.js";
 import { connectDb, disconnectDb } from "./config/db.js";
 import { env } from "./config/env.js";
 import { logger } from "./config/logger.js";
+import { Product } from "./models/Product.js";
+import { runSeed } from "./seed/seed.js";
 import { Server } from "node:http";
 
 let server: Server | null = null;
@@ -10,6 +12,13 @@ async function bootstrap(): Promise<void> {
   try {
     // Connect to database
     await connectDb();
+
+    // Auto-seed if running on fresh in-memory or empty database
+    const productCount = await Product.countDocuments();
+    if (productCount === 0) {
+      logger.info("Empty database detected. Auto-seeding initial catalog and demo account...");
+      await runSeed(false);
+    }
 
     // Create Express app
     const app = createApp();
@@ -47,14 +56,5 @@ async function shutdown(signal: string): Promise<void> {
 
 process.on("SIGTERM", () => shutdown("SIGTERM"));
 process.on("SIGINT", () => shutdown("SIGINT"));
-
-process.on("unhandledRejection", (reason, promise) => {
-  logger.error({ reason, promise }, "Unhandled Rejection caught");
-});
-
-process.on("uncaughtException", (error) => {
-  logger.fatal({ error }, "Uncaught Exception caught");
-  process.exit(1);
-});
 
 bootstrap();

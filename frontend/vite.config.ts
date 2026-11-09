@@ -12,6 +12,7 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    host: "0.0.0.0", // Bind to all interfaces so LAN/phone can reach it
     proxy: {
       "/api": {
         target: "http://localhost:5000",
