@@ -12,15 +12,20 @@ export function TopBar({ onMenuClick }: TopBarProps) {
   const { business, user } = useAuthStore();
 
   return (
-    <header className="h-18 border-b border-border bg-surface px-6 flex items-center justify-between sticky top-0 z-30">
-      <div className="flex items-center gap-4">
+    <header className="h-16 border-b border-border bg-surface px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30">
+      <div className="flex items-center gap-2 sm:gap-4">
         <button
           onClick={onMenuClick}
-          className="md:hidden p-2 rounded-lg text-ink hover:bg-subtle cursor-pointer"
+          className="md:hidden p-1.5 rounded-lg text-ink hover:bg-subtle cursor-pointer"
           aria-label="Open navigation menu"
         >
-          <Menu className="h-6 w-6" />
+          <Menu className="h-5 w-5" />
         </button>
+        <div className="md:hidden flex items-center gap-1.5">
+          <span className="font-heading font-black tracking-tight text-sm text-ink truncate max-w-[150px]">
+            {business?.name || "ProcurePilot"}
+          </span>
+        </div>
         <div className="hidden sm:flex items-center gap-2">
           <Badge variant="accent" dot>
             Sandbox Mode (₹88/USD)

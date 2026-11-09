@@ -63,10 +63,10 @@ export function CommandBar({ onSubmit, isLoading, initialValue = "" }: CommandBa
   return (
     <div className="w-full max-w-4xl mx-auto flex flex-col gap-4">
       {/* Giant Centred Command Input Card */}
-      <div className="card-sharp p-6 sm:p-8 bg-surface border-2 border-ink/20 focus-within:border-ink transition-all shadow-lg rounded-[28px]">
+      <div className="card-sharp p-4 sm:p-8 bg-surface border-2 border-ink/20 focus-within:border-ink transition-all shadow-lg rounded-2xl sm:rounded-[28px]">
         <div className="flex items-center gap-2 mb-3 text-xs font-bold uppercase tracking-wider text-muted">
-          <Sparkles className="h-4 w-4 text-accent-ink bg-accent p-0.5 rounded-sm" />
-          <span>ProcurePilot Autonomous Purchasing Agent</span>
+          <Sparkles className="h-4 w-4 text-accent-ink bg-accent p-0.5 rounded-sm shrink-0" />
+          <span className="truncate">Autonomous Purchasing Agent</span>
         </div>
 
         <textarea
@@ -77,11 +77,11 @@ export function CommandBar({ onSubmit, isLoading, initialValue = "" }: CommandBa
           placeholder={placeholderText || "Describe what you need in plain words..."}
           rows={3}
           disabled={isLoading}
-          className="w-full bg-transparent text-xl sm:text-2xl font-bold tracking-tight text-ink placeholder:text-muted/40 resize-none focus:outline-none leading-relaxed"
+          className="w-full bg-transparent text-base sm:text-2xl font-bold tracking-tight text-ink placeholder:text-muted/40 resize-none focus:outline-none leading-relaxed"
         />
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 mt-2 border-t border-border">
-          <div className="flex items-center gap-2 text-xs font-medium text-muted">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-4 mt-2 border-t border-border">
+          <div className="hidden sm:flex items-center gap-2 text-xs font-medium text-muted">
             <kbd className="px-2 py-1 rounded bg-subtle border border-border font-mono text-[11px] font-bold">
               ⌘ / Ctrl + ↵
             </kbd>
@@ -93,10 +93,10 @@ export function CommandBar({ onSubmit, isLoading, initialValue = "" }: CommandBa
             isLoading={isLoading}
             variant="primary"
             size="lg"
-            className="w-full sm:w-auto h-14 font-extrabold px-8 group"
+            className="w-full sm:w-auto h-12 sm:h-14 font-extrabold px-6 sm:px-8 group text-sm sm:text-base cursor-pointer"
           >
             <span>Run Purchasing Agent</span>
-            <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
           </Button>
         </div>
       </div>

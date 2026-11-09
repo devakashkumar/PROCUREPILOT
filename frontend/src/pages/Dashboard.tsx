@@ -49,8 +49,8 @@ export const Dashboard: React.FC = () => {
           </p>
         </div>
 
-        <Link to="/procure">
-          <Button variant="accent" size="lg" className="gap-2 font-bold shadow-md shadow-accent/20">
+        <Link to="/procure" className="w-full sm:w-auto">
+          <Button variant="accent" size="lg" className="w-full sm:w-auto gap-2 font-bold shadow-md shadow-accent/20">
             <Sparkles className="h-4 w-4" />
             New Purchase Request
           </Button>

@@ -45,8 +45,13 @@ export class PaymentController {
       },
     });
 
-    // Idempotent return if already CREATED
-    if (existingPayment && existingPayment.status === PAYMENT_STATUS.CREATED && existingPayment.paypalOrderId) {
+    // Idempotent return if already CREATED or PENDING with a paypalOrderId
+    if (
+      existingPayment &&
+      (existingPayment.status === PAYMENT_STATUS.CREATED ||
+        existingPayment.status === PAYMENT_STATUS.PENDING) &&
+      existingPayment.paypalOrderId
+    ) {
       sendSuccess(res, {
         paymentId: existingPayment.id,
         paypalOrderId: existingPayment.paypalOrderId,
@@ -62,8 +67,12 @@ export class PaymentController {
       throw new ApiError(400, ERROR_CODES.CONFLICT, "Order is already paid");
     }
 
-    // Precondition: Order must be APPROVED or PAYMENT_FAILED (for retry)
-    if (order.status !== ORDER_STATUS.APPROVED && order.status !== ORDER_STATUS.PAYMENT_FAILED) {
+    // Precondition: Order must be APPROVED, PAYMENT_FAILED, or PAYMENT_PENDING with active payment
+    if (
+      order.status !== ORDER_STATUS.APPROVED &&
+      order.status !== ORDER_STATUS.PAYMENT_FAILED &&
+      order.status !== ORDER_STATUS.PAYMENT_PENDING
+    ) {
       throw new ApiError(
         400,
         ERROR_CODES.INVALID_STATE,

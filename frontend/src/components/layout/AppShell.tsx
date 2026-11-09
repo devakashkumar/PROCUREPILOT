@@ -23,9 +23,9 @@ export function AppShell() {
       </Dialog>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 pb-20 md:pb-6">
+      <div className="flex-1 flex flex-col min-w-0 pb-28 md:pb-8">
         <TopBar onMenuClick={() => setMobileDrawerOpen(true)} />
-        <main className="flex-1 px-4 sm:px-8 py-6 max-w-7xl w-full mx-auto">
+        <main className="flex-1 px-3 sm:px-8 py-4 sm:py-6 max-w-7xl w-full mx-auto">
           <Outlet />
         </main>
       </div>

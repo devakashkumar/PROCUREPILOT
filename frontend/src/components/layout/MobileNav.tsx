@@ -14,7 +14,7 @@ export function MobileNav() {
   const location = useLocation();
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface border-t border-border px-2 py-2 flex items-center justify-around">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-md border-t border-border px-2 py-1.5 pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))] flex items-center justify-around shadow-lg">
       {mobileItems.map((item) => {
         const isActive = location.pathname === item.href;
         const Icon = item.icon;

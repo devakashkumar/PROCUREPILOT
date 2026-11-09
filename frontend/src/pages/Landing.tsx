@@ -4,7 +4,6 @@ import {
   Sparkles,
   ArrowRight,
   ShieldCheck,
-  Cpu,
   Calculator,
   Lock,
   Layers,
@@ -19,9 +18,9 @@ import { ThemeToggle } from "../components/layout/ThemeToggle.js";
 import { Reveal } from "../components/motion/Reveal.js";
 
 const DEMO_PROMPTS = [
-  "I need to restock 20 units of cooking oil, 30 packets of rice and 15 units of detergent. Keep total under ₹15,000. Prioritize reliable suppliers.",
-  "Restock 50kg basmati rice, 25kg atta flour, 10 packets toor dal. Need fastest delivery within ₹12,000.",
-  "Order 40 packs of milk, 15 jars of instant coffee, 20 packets of tea leaves for supermarket shelf. Balanced price and reliability.",
+  "Restock 20 units of cooking oil, 30 packets of rice and 15 units of detergent under ₹15,000. Prioritize reliable suppliers.",
+  "Restock 50kg basmati rice, 25kg wheat flour, 10 packs toor dal. Need fastest delivery within ₹12,000.",
+  "Order 40 packs of milk, 15 jars of coffee, 20 packets of tea leaves. Balance price and reliability.",
 ];
 
 export const Landing: React.FC = () => {
@@ -44,46 +43,43 @@ export const Landing: React.FC = () => {
         setCharIndex(0);
         setActivePromptIndex((prev) => (prev + 1) % DEMO_PROMPTS.length);
         setDisplayedText("");
-      }, 4000);
+      }, 3500);
       return () => clearTimeout(pauseTimer);
     }
   }, [charIndex, activePromptIndex]);
 
   return (
-    <div className="min-h-screen bg-background text-ink selection:bg-accent selection:text-accent-ink">
-      {/* Top Navigation */}
+    <div className="min-h-screen bg-background text-ink selection:bg-accent selection:text-accent-ink overflow-x-hidden">
+      {/* Top Navigation - Ultra clean & mobile responsive */}
       <header className="sticky top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent text-accent-ink shadow-sm">
-              <Sparkles className="h-5 w-5" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent text-accent-ink shadow-sm">
+              <Sparkles className="h-4 w-4" />
             </div>
-            <div className="flex flex-col">
-              <span className="font-heading font-black tracking-tight text-lg text-ink">
-                ProcurePilot<span className="text-accent">.ai</span>
-              </span>
-              <span className="text-[10px] font-mono uppercase tracking-wider text-muted">Autonomous Kirana Agent</span>
-            </div>
+            <span className="font-heading font-black tracking-tight text-lg text-ink">
+              ProcurePilot<span className="text-emerald-600 dark:text-accent">.ai</span>
+            </span>
           </Link>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <ThemeToggle />
             {isAuthenticated ? (
               <Link to="/dashboard">
-                <Button variant="accent" size="sm" className="gap-2 font-semibold">
-                  Dashboard <ArrowRight className="h-4 w-4" />
+                <Button variant="accent" size="sm" className="font-bold gap-1 text-xs sm:text-sm">
+                  Dashboard <ArrowRight className="h-3.5 w-3.5" />
                 </Button>
               </Link>
             ) : (
               <>
                 <Link to="/login">
-                  <Button variant="ghost" size="sm" className="font-medium">
+                  <Button variant="ghost" size="sm" className="font-medium text-xs sm:text-sm">
                     Log in
                   </Button>
                 </Link>
                 <Link to="/register">
-                  <Button variant="accent" size="sm" className="gap-1.5 font-semibold">
-                    Get Started <ArrowRight className="h-4 w-4" />
+                  <Button variant="accent" size="sm" className="font-bold text-xs sm:text-sm">
+                    Get Started
                   </Button>
                 </Link>
               </>
@@ -93,62 +89,57 @@ export const Landing: React.FC = () => {
       </header>
 
       {/* Hero Section */}
-      <main className="mx-auto max-w-7xl px-4 pt-16 pb-24 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-5xl px-4 pt-12 pb-20 sm:pt-20 sm:pb-28">
         <div className="text-center max-w-3xl mx-auto">
+          {/* Main Headline with crystal-clear high-contrast Small Businesses text */}
           <Reveal>
-            <div className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3.5 py-1 text-xs font-semibold text-ink dark:text-accent mb-6">
-              <Zap className="h-3.5 w-3.5 fill-current" />
-              <span>Next-Gen Autonomous Sourcing with PayPal Sandbox</span>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.1}>
-            <h1 className="font-heading text-4xl font-extrabold tracking-tight sm:text-6xl text-ink">
+            <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-ink leading-[1.15]">
               Autonomous Purchasing for{" "}
-              <span className="bg-gradient-to-r from-accent via-amber-400 to-lime-500 bg-clip-text text-transparent">
+              <span className="block sm:inline font-black text-emerald-600 dark:text-accent">
                 Small Businesses
               </span>
             </h1>
           </Reveal>
 
-          <Reveal delay={0.2}>
-            <p className="mt-5 text-base sm:text-lg text-muted max-w-2xl mx-auto leading-relaxed">
-              Kirana stores, supermarkets, and cafes type plain-text restock requests. Gemini AI structures the demand,
-              a deterministic knapsack engine solves optimal supplier baskets, and PayPal settles the verified purchase.
+          <Reveal delay={0.1}>
+            <p className="mt-4 sm:mt-6 text-sm sm:text-lg text-muted max-w-2xl mx-auto leading-relaxed">
+              Kirana stores, supermarkets, and cafes speak or type restock requests. AI parses items, knapsack dynamic programming optimizes supplier baskets, and PayPal settles the verified purchase.
             </p>
           </Reveal>
 
-          {/* Interactive Typewriter Showcase */}
-          <Reveal delay={0.3}>
-            <div className="mt-10 rounded-2xl border border-border bg-card p-5 sm:p-6 shadow-xl text-left max-w-2xl mx-auto ring-1 ring-border/50">
-              <div className="flex items-center justify-between border-b border-border/60 pb-3 mb-4 text-xs font-mono text-muted">
-                <span className="flex items-center gap-1.5 text-accent font-semibold">
-                  <Sparkles className="h-3.5 w-3.5" /> NATURAL LANGUAGE INPUT
-                </span>
-                <span>Gemini 2.5 Flash + Zod</span>
+          {/* Clean Interactive Prompt Simulation */}
+          <Reveal delay={0.2}>
+            <div className="mt-8 sm:mt-10 rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-md text-left max-w-2xl mx-auto">
+              <div className="flex items-center gap-2 border-b border-border/50 pb-3 mb-3 text-xs text-muted">
+                <Sparkles className="h-4 w-4 text-emerald-600 dark:text-accent" />
+                <span className="font-medium">Natural Language Restock Request</span>
               </div>
-              <div className="font-mono text-sm sm:text-base text-ink min-h-[4rem] whitespace-pre-wrap leading-relaxed">
+              <div className="font-mono text-sm sm:text-base text-ink min-h-[3.5rem] leading-relaxed">
                 {displayedText}
-                <span className="animate-pulse inline-block w-2 h-4 bg-accent ml-1 translate-y-0.5" />
-              </div>
-              <div className="mt-4 pt-3 border-t border-border/40 flex items-center justify-between text-xs text-muted">
-                <span>Budget constraint recognized: ₹15,000</span>
-                <span className="font-mono text-emerald-600 dark:text-emerald-400 font-semibold">3 items extracted</span>
+                <span className="animate-pulse inline-block w-2 h-4 bg-emerald-600 dark:bg-accent ml-1 translate-y-0.5" />
               </div>
             </div>
           </Reveal>
 
-          {/* Call to Actions */}
-          <Reveal delay={0.4}>
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-              <Link to="/procure">
-                <Button variant="accent" size="lg" className="gap-2 text-base font-bold shadow-lg shadow-accent/20">
-                  <Sparkles className="h-5 w-5" />
+          {/* Clean Call to Actions - Full width on phone */}
+          <Reveal delay={0.3}>
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
+              <Link to="/procure" className="w-full sm:w-auto">
+                <Button
+                  variant="accent"
+                  size="lg"
+                  className="w-full sm:w-auto gap-2 text-sm sm:text-base font-bold shadow-lg shadow-accent/20 h-12"
+                >
+                  <Sparkles className="h-4 w-4" />
                   Try Autonomous Procurement
                 </Button>
               </Link>
-              <Link to="/login">
-                <Button variant="outline" size="lg" className="text-base font-semibold">
+              <Link to="/login" className="w-full sm:w-auto">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto text-sm sm:text-base font-semibold h-12"
+                >
                   1-Click Demo Login
                 </Button>
               </Link>
@@ -156,139 +147,89 @@ export const Landing: React.FC = () => {
           </Reveal>
         </div>
 
-        {/* Stats Strip */}
-        <div className="mt-20 grid grid-cols-2 gap-4 rounded-3xl border border-border bg-card p-6 shadow-sm sm:grid-cols-4">
-          <div className="text-center p-3">
-            <p className="font-heading text-2xl sm:text-3xl font-extrabold text-ink">100%</p>
-            <p className="text-xs font-medium text-muted mt-1">Deterministic Math</p>
-          </div>
-          <div className="text-center p-3">
-            <p className="font-heading text-2xl sm:text-3xl font-extrabold text-accent">{"< 50ms"}</p>
-            <p className="text-xs font-medium text-muted mt-1">Knapsack Optimization</p>
-          </div>
-          <div className="text-center p-3">
-            <p className="font-heading text-2xl sm:text-3xl font-extrabold text-ink">Orders v2</p>
-            <p className="text-xs font-medium text-muted mt-1">PayPal Sandbox</p>
-          </div>
-          <div className="text-center p-3">
-            <p className="font-heading text-2xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">Zero</p>
-            <p className="text-xs font-medium text-muted mt-1">AI Financial Authority</p>
-          </div>
-        </div>
+        {/* 3 Core Value Pillars - Clean & Spacious */}
+        <section className="mt-20 sm:mt-28">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+            <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-card-subtle text-emerald-600 dark:text-accent mb-4">
+                <Sparkles className="h-5 w-5" />
+              </div>
+              <h3 className="font-heading font-bold text-base text-ink">Conversational Input</h3>
+              <p className="mt-2 text-xs sm:text-sm text-muted leading-relaxed">
+                Type or speak informal restock needs in English or Hinglish. Gemini AI extracts quantities, units, and budget limits into structured data.
+              </p>
+            </div>
 
-        {/* 5-Step Pipeline */}
-        <section className="mt-28">
-          <div className="text-center mb-12">
-            <h2 className="text-xs font-bold font-mono tracking-widest text-accent uppercase">
-              End-to-End Autonomous Pipeline
-            </h2>
-            <p className="mt-2 font-heading text-3xl font-bold text-ink">
-              From natural voice or text to fulfilled sub-orders
-            </p>
-          </div>
+            <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-card-subtle text-emerald-600 dark:text-accent mb-4">
+                <Calculator className="h-5 w-5" />
+              </div>
+              <h3 className="font-heading font-bold text-base text-ink">Knapsack Optimization</h3>
+              <p className="mt-2 text-xs sm:text-sm text-muted leading-relaxed">
+                A pure mathematical solver evaluates 210+ regional supplier offers to find the lowest price, fastest delivery, or most reliable vendor combination.
+              </p>
+            </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-5">
-            {[
-              {
-                step: "01",
-                icon: Sparkles,
-                title: "Prompt Extraction",
-                desc: "Gemini 2.5 Flash extracts quantities, items, and budget constraints into strictly validated Zod schemas.",
-              },
-              {
-                step: "02",
-                icon: Layers,
-                title: "Catalogue Matching",
-                desc: "MongoDB text search and token scoring link requests to active supplier offers with MOQ checking.",
-              },
-              {
-                step: "03",
-                icon: Calculator,
-                title: "Knapsack Engine",
-                desc: "Deterministic DP optimizer calculates the exact mathematical best combo across price, speed, and reliability.",
-              },
-              {
-                step: "04",
-                icon: ShieldCheck,
-                title: "Owner Approval",
-                desc: "Strict state machine enforces explicit owner review and sign-off before any payment can be created.",
-              },
-              {
-                step: "05",
-                icon: Lock,
-                title: "PayPal Checkout",
-                desc: "PayPal Orders v2 escrow checkout with authoritative backend re-verification and webhook signatures.",
-              },
-            ].map((item, idx) => {
-              const Icon = item.icon;
-              return (
-                <div
-                  key={idx}
-                  className="relative rounded-2xl border border-border bg-card p-5 shadow-sm transition-all hover:border-accent/50 hover:shadow-md"
-                >
-                  <span className="font-mono text-xs font-bold text-accent">{item.step}</span>
-                  <div className="mt-3 flex h-10 w-10 items-center justify-center rounded-xl bg-card-subtle text-ink">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <h3 className="mt-4 font-bold text-sm text-ink">{item.title}</h3>
-                  <p className="mt-1.5 text-xs text-muted leading-relaxed">{item.desc}</p>
-                </div>
-              );
-            })}
+            <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-card-subtle text-emerald-600 dark:text-accent mb-4">
+                <ShieldCheck className="h-5 w-5" />
+              </div>
+              <h3 className="font-heading font-bold text-base text-ink">Financial Guardrails</h3>
+              <p className="mt-2 text-xs sm:text-sm text-muted leading-relaxed">
+                AI never moves money. Store owners must review and approve purchase orders before server-verified PayPal sandbox settlement occurs.
+              </p>
+            </div>
           </div>
         </section>
 
-        {/* Non-Negotiable Safety Principles */}
-        <section className="mt-28 rounded-3xl border border-border bg-card p-8 sm:p-12 shadow-sm">
+        {/* Clean Safety & Trust Grid */}
+        <section className="mt-16 sm:mt-24 rounded-3xl border border-border bg-card p-6 sm:p-10 shadow-sm">
           <div className="max-w-2xl">
-            <span className="text-xs font-bold font-mono tracking-widest text-accent uppercase">
-              Financial Integrity & Safety
-            </span>
-            <h2 className="mt-2 font-heading text-3xl font-bold text-ink">
-              Designed with strict non-negotiable safety guardrails
+            <h2 className="font-heading text-xl sm:text-2xl font-bold text-ink">
+              Enterprise Safety & Financial Guardrails
             </h2>
-            <p className="mt-3 text-sm text-muted">
-              Built for production financial safety. AI assists with understanding and explanations, but code holds authoritative control over money.
+            <p className="mt-2 text-xs sm:text-sm text-muted leading-relaxed">
+              Designed with strict non-negotiable boundaries: AI assists with understanding, but deterministic code controls money.
             </p>
           </div>
 
-          <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div className="flex items-start gap-4 rounded-2xl border border-border/80 bg-card-subtle p-5">
-              <CheckCircle2 className="h-6 w-6 shrink-0 text-emerald-500 mt-0.5" />
+          <div className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex items-start gap-3 rounded-xl bg-card-subtle p-4">
+              <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600 dark:text-accent mt-0.5" />
               <div>
-                <h4 className="font-bold text-sm text-ink">Zero AI Financial Authority</h4>
+                <h4 className="font-bold text-xs sm:text-sm text-ink">Zero AI Financial Authority</h4>
                 <p className="mt-1 text-xs text-muted leading-relaxed">
-                  AI NEVER computes totals, NEVER selects winners arbitrarily, and NEVER marks orders paid. All arithmetic is integer paise math.
+                  All monetary calculations are performed in integer paise with zero floating point errors.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-4 rounded-2xl border border-border/80 bg-card-subtle p-5">
-              <CheckCircle2 className="h-6 w-6 shrink-0 text-emerald-500 mt-0.5" />
+            <div className="flex items-start gap-3 rounded-xl bg-card-subtle p-4">
+              <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600 dark:text-accent mt-0.5" />
               <div>
-                <h4 className="font-bold text-sm text-ink">Authoritative Re-Verification</h4>
+                <h4 className="font-bold text-xs sm:text-sm text-ink">Mandatory Owner Sign-off</h4>
                 <p className="mt-1 text-xs text-muted leading-relaxed">
-                  Never trust frontend numbers. The backend recomputes totals at order creation, payment creation, and during capture.
+                  The order state machine requires explicit owner approval before payment creation is unlocked.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-4 rounded-2xl border border-border/80 bg-card-subtle p-5">
-              <CheckCircle2 className="h-6 w-6 shrink-0 text-emerald-500 mt-0.5" />
+            <div className="flex items-start gap-3 rounded-xl bg-card-subtle p-4">
+              <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600 dark:text-accent mt-0.5" />
               <div>
-                <h4 className="font-bold text-sm text-ink">Mandatory Owner Sign-off</h4>
+                <h4 className="font-bold text-xs sm:text-sm text-ink">Backend Re-Verification</h4>
                 <p className="mt-1 text-xs text-muted leading-relaxed">
-                  State machine enforces APPROVED status before PayPal order creation is permitted. Draft orders cannot be charged.
+                  Frontend numbers are never trusted; totals are recalculated from the database at checkout.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-4 rounded-2xl border border-border/80 bg-card-subtle p-5">
-              <CheckCircle2 className="h-6 w-6 shrink-0 text-emerald-500 mt-0.5" />
+            <div className="flex items-start gap-3 rounded-xl bg-card-subtle p-4">
+              <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600 dark:text-accent mt-0.5" />
               <div>
-                <h4 className="font-bold text-sm text-ink">Cryptographic Webhook Verification</h4>
+                <h4 className="font-bold text-xs sm:text-sm text-ink">PayPal Orders API v2</h4>
                 <p className="mt-1 text-xs text-muted leading-relaxed">
-                  PayPal webhooks verify digital signatures via PayPal's security endpoints before acknowledging completed payments.
+                  Server-side capture verification with digital webhook signatures.
                 </p>
               </div>
             </div>
@@ -296,13 +237,13 @@ export const Landing: React.FC = () => {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border/60 bg-card py-8 text-center text-xs text-muted">
-        <div className="mx-auto max-w-7xl px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© 2026 ProcurePilot AI — Autonomous Kirana & Supermarket Purchasing Agent.</p>
+      {/* Clean Footer */}
+      <footer className="border-t border-border/50 bg-card py-6 text-xs text-muted">
+        <div className="mx-auto max-w-6xl px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+          <p>© 2026 ProcurePilot AI — Autonomous Purchasing for Small Businesses.</p>
           <div className="flex items-center gap-4">
-            <span className="font-mono text-[11px] text-muted">PayPal Orders API v2 • Demo FX ₹88/USD</span>
-            <Link to="/login" className="hover:text-ink transition-colors font-medium">Demo Access</Link>
+            <Link to="/login" className="hover:text-ink transition-colors font-medium">Demo Login</Link>
+            <Link to="/procure" className="hover:text-ink transition-colors font-medium">Procure Agent</Link>
           </div>
         </div>
       </footer>

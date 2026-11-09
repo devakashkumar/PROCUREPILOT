@@ -125,15 +125,16 @@ export function ApprovalPanel({
 
       {/* STATE 3: PAYMENT PENDING */}
       {order.status === "PAYMENT_PENDING" && (
-        <div className="flex items-center justify-between p-4 rounded-[16px] bg-info/10 border border-info/30">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-[16px] bg-info/10 border border-info/30">
           <div>
             <div className="text-sm font-bold text-info">Payment In Progress</div>
             <div className="text-xs text-muted">Complete PayPal checkout to finalize procurement.</div>
           </div>
           <Button
             onClick={() => navigate(`/orders/${order.id}/checkout`)}
-            variant="primary"
-            size="sm"
+            variant="accent"
+            size="md"
+            className="w-full sm:w-auto font-bold cursor-pointer"
           >
             Resume Checkout
           </Button>

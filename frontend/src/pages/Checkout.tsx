@@ -40,10 +40,37 @@ export const Checkout: React.FC = () => {
     );
   }
 
+  // If order is already paid, show direct confirmation
+  if (order.status === "PAID") {
+    return (
+      <div className="mx-auto max-w-lg rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-6 sm:p-8 text-center my-6">
+        <ShieldCheck className="mx-auto h-12 w-12 text-emerald-500" />
+        <h3 className="mt-4 font-heading text-xl font-bold text-ink">
+          Order Already Paid
+        </h3>
+        <p className="mt-2 text-xs sm:text-sm text-muted leading-relaxed">
+          Purchase Order <strong className="text-ink font-mono">{order.orderNumber}</strong> has already been verified and settled via PayPal Sandbox.
+        </p>
+        <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <Link to={`/orders/${order.id}`} className="w-full sm:w-auto">
+            <Button variant="outline" size="md" className="w-full">
+              View Purchase Order
+            </Button>
+          </Link>
+          <Link to={`/orders/${order.id}/payment-result?paymentId=${order.paymentId || ""}`} className="w-full sm:w-auto">
+            <Button variant="accent" size="md" className="w-full font-bold">
+              View Payment Receipt
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   // Mandatory Safety Check: Order must be APPROVED or PAYMENT_PENDING
   if (order.status !== "APPROVED" && order.status !== "PAYMENT_PENDING") {
     return (
-      <div className="mx-auto max-w-lg rounded-2xl border border-amber-500/30 bg-amber-500/10 p-8 text-center">
+      <div className="mx-auto max-w-lg rounded-2xl border border-amber-500/30 bg-amber-500/10 p-6 sm:p-8 text-center my-6">
         <ShieldCheck className="mx-auto h-12 w-12 text-amber-500" />
         <h3 className="mt-4 font-heading text-lg font-bold text-ink">
           Approval Required Before Payment
@@ -52,8 +79,8 @@ export const Checkout: React.FC = () => {
           The safety state machine requires explicit owner sign-off before a PayPal order can be created.
           This order currently has status <strong className="text-ink">{order.status}</strong>.
         </p>
-        <Link to={`/orders/${order.id}`} className="mt-6 inline-block">
-          <Button variant="accent" size="md" className="font-bold">
+        <Link to={`/orders/${order.id}`} className="mt-6 inline-block w-full sm:w-auto">
+          <Button variant="accent" size="md" className="w-full font-bold">
             Review & Approve Order
           </Button>
         </Link>
