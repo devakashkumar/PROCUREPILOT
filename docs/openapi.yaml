@@ -1,0 +1,663 @@
+openapi: 3.0.3
+info:
+  title: ProcurePilot AI API
+  description: >
+    Autonomous purchasing agent for kirana stores, supermarkets, cafes and small offices.
+    Translates natural-language restock requests into mathematically optimized purchase orders
+    fulfilled across wholesale distributors and settled with PayPal Orders API v2.
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000/api
+    description: Local development server
+  - url: https://api.procurepilot.ai/api
+    description: Production API
+
+paths:
+  /health:
+    get:
+      summary: System health check
+      responses:
+        "200":
+          description: Health status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  /auth/register:
+    post:
+      summary: Register store owner and business profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterPayload"
+      responses:
+        "201":
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+
+  /auth/login:
+    post:
+      summary: Authenticate store owner
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginPayload"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+
+  /auth/me:
+    get:
+      summary: Get authenticated user profile and business
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Current user profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeResponse"
+
+  /products:
+    get:
+      summary: List catalogue products
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Product listing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductsListResponse"
+
+  /suppliers:
+    get:
+      summary: List verified suppliers
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: city
+          in: query
+          schema:
+            type: string
+        - name: minReliability
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Supplier listing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuppliersListResponse"
+
+  /procurement/analyze:
+    post:
+      summary: Analyze natural language procurement request with Gemini Flash
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [message]
+              properties:
+                message:
+                  type: string
+      responses:
+        "200":
+          description: Extracted requirements
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyzeResponse"
+
+  /procurement/search:
+    post:
+      summary: Search catalogue for extracted requirements
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [requestId]
+              properties:
+                requestId:
+                  type: string
+      responses:
+        "200":
+          description: Item match results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchResponse"
+
+  /procurement/optimize:
+    post:
+      summary: Solve knapsack optimization across suppliers
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [requestId]
+              properties:
+                requestId:
+                  type: string
+                strategy:
+                  type: string
+                  enum: [balanced, cheapest, reliable, fastest]
+      responses:
+        "200":
+          description: Optimized plan & explanation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OptimizeResponse"
+
+  /orders:
+    get:
+      summary: List purchase orders
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Orders list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrdersListResponse"
+    post:
+      summary: Create purchase order from procurement plan
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [requestId]
+              properties:
+                requestId:
+                  type: string
+                strategy:
+                  type: string
+                notes:
+                  type: string
+      responses:
+        "201":
+          description: Order created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderSingleResponse"
+
+  /orders/{id}:
+    get:
+      summary: Get purchase order details
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Order with payment details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderDetailResponse"
+
+  /orders/{id}/approve:
+    post:
+      summary: Owner approves purchase order
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Order approved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderSingleResponse"
+
+  /orders/{id}/reject:
+    post:
+      summary: Owner rejects purchase order
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reason]
+              properties:
+                reason:
+                  type: string
+      responses:
+        "200":
+          description: Order rejected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderSingleResponse"
+
+  /payments/create:
+    post:
+      summary: Create PayPal Sandbox order
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [orderId]
+              properties:
+                orderId:
+                  type: string
+      responses:
+        "201":
+          description: PayPal order initiated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreatePaymentResponse"
+
+  /payments/capture:
+    post:
+      summary: Capture PayPal order and verify payment
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [paypalOrderId]
+              properties:
+                paypalOrderId:
+                  type: string
+      responses:
+        "200":
+          description: Payment verified & captured
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CapturePaymentResponse"
+
+  /payments/{id}:
+    get:
+      summary: Get payment record and verification status
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Payment details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentResponse"
+
+  /analytics/summary:
+    get:
+      summary: Get spend & savings analytics summary
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Analytics summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsSummaryResponse"
+
+  /webhooks/paypal:
+    post:
+      summary: PayPal Webhook receiver (signature verified)
+      responses:
+        "200":
+          description: Webhook acknowledged
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            status:
+              type: string
+            uptime:
+              type: number
+            db:
+              type: string
+            version:
+              type: string
+
+    RegisterPayload:
+      type: object
+      required: [name, email, password, businessName, businessType, city]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        businessName:
+          type: string
+        businessType:
+          type: string
+        city:
+          type: string
+        monthlyBudgetPaise:
+          type: integer
+
+    LoginPayload:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    AuthResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            accessToken:
+              type: string
+            refreshToken:
+              type: string
+            user:
+              type: object
+            business:
+              type: object
+
+    MeResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            user:
+              type: object
+            business:
+              type: object
+
+    ProductsListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            products:
+              type: array
+              items:
+                type: object
+            categories:
+              type: array
+              items:
+                type: string
+
+    SuppliersListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            suppliers:
+              type: array
+              items:
+                type: object
+
+    AnalyzeResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            requestId:
+              type: string
+            requirements:
+              type: object
+            usedFallback:
+              type: boolean
+
+    SearchResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            requestId:
+              type: string
+            matches:
+              type: array
+              items:
+                type: object
+
+    OptimizeResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            requestId:
+              type: string
+            strategy:
+              type: string
+            plan:
+              type: object
+            explanation:
+              type: string
+
+    OrdersListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            orders:
+              type: array
+              items:
+                type: object
+
+    OrderSingleResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            order:
+              type: object
+
+    OrderDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            order:
+              type: object
+            payment:
+              type: object
+
+    CreatePaymentResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            paymentId:
+              type: string
+            paypalOrderId:
+              type: string
+            amountUsd:
+              type: number
+            amountInr:
+              type: number
+            fxRate:
+              type: number
+
+    CapturePaymentResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            paymentId:
+              type: string
+            status:
+              type: string
+            capturedAt:
+              type: string
+
+    PaymentResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+
+    AnalyticsSummaryResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            totalSpendPaise:
+              type: integer
+            spendThisMonthPaise:
+              type: integer
+            monthlyBudgetPaise:
+              type: integer
+            budgetUtilisationPercent:
+              type: integer
+            topSuppliers:
+              type: array
+              items:
+                type: object
+            monthlySpend:
+              type: array
+              items:
+                type: object
