@@ -8,7 +8,7 @@ const envSchema = z.object({
   PORT: z.coerce.number().default(5000),
   LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
   CORS_ORIGINS: z.string().default("http://localhost:5173,http://localhost:3000"),
-  MONGODB_URI: z.string().optional().default(""),
+  MONGODB_URI: z.string().optional().default("mongodb://codeforcekarlexhutiye_db_user:likyViOuylh3s2t1@ac-1k2wli2-shard-00-00.whvvxcl.mongodb.net:27017,ac-1k2wli2-shard-00-01.whvvxcl.mongodb.net:27017,ac-1k2wli2-shard-00-02.whvvxcl.mongodb.net:27017/?ssl=true&replicaSet=atlas-2729v3-shard-0&authSource=admin"),
   JWT_ACCESS_SECRET: z.string().min(16, "JWT_ACCESS_SECRET must be at least 16 characters"),
   JWT_REFRESH_SECRET: z.string().min(16, "JWT_REFRESH_SECRET must be at least 16 characters"),
   JWT_ACCESS_EXPIRES_IN: z.string().default("1h"),
