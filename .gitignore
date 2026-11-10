@@ -12,7 +12,9 @@ build/
 
 # Flutter generated files
 ios/Flutter/.last_build_id
-android/local.properties# Dependencies
+android/local.properties
+
+# Dependencies
 node_modules/
 .pnp
 .pnp.js
