@@ -1,5 +1,4 @@
 import { Sparkles } from "lucide-react";
-import { Badge } from "../ui/Badge.js";
 
 interface ExplanationPanelProps {
   explanation: string;
@@ -9,20 +8,20 @@ export function ExplanationPanel({ explanation }: ExplanationPanelProps) {
   if (!explanation) return null;
 
   return (
-    <div className="card-sharp p-6 bg-surface border border-border rounded-[20px] flex flex-col gap-3">
-      <div className="flex items-center justify-between">
+    <div className="p-6 bg-surface border border-border rounded-[12px] flex flex-col gap-3 shadow-md">
+      <div className="flex items-center justify-between border-b border-border pb-3">
         <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-accent-ink bg-accent p-0.5 rounded-sm" />
-          <h4 className="text-xs font-bold uppercase tracking-wider text-muted">
-            Plan Reasoning & Trade-offs
+          <Sparkles className="h-3.5 w-3.5 text-ink" />
+          <h4 className="text-[11px] font-mono uppercase tracking-widest text-muted">
+            Decision Explanation & Vendor Trade-offs
           </h4>
         </div>
-        <Badge variant="accent" className="text-[10px]">
-          AI explanation (generated)
-        </Badge>
+        <span className="font-mono text-[9px] uppercase tracking-wider text-muted border border-border px-1 py-0.2 rounded-[3px]">
+          GEMINI JUSTIFICATION
+        </span>
       </div>
 
-      <p className="text-sm font-medium text-ink leading-relaxed font-sans">
+      <p className="text-sm font-normal text-ink/90 leading-relaxed font-sans">
         {explanation}
       </p>
     </div>

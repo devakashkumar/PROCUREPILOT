@@ -15,51 +15,51 @@ export function StatusBadge({
     case "COMPLETED":
       return (
         <Badge variant="success" size={size} dot className={className}>
-          {status === "PAID" ? "Paid & Confirmed" : "Completed"}
+          {status === "PAID" ? "PAID & VERIFIED" : "COMPLETED"}
         </Badge>
       );
     case "APPROVED":
       return (
         <Badge variant="accent" size={size} dot className={className}>
-          Approved
+          APPROVED
         </Badge>
       );
     case "PENDING_APPROVAL":
       return (
         <Badge variant="warning" size={size} dot className={className}>
-          Pending Approval
+          PENDING APPROVAL
         </Badge>
       );
     case "PAYMENT_PENDING":
     case "PENDING":
       return (
         <Badge variant="info" size={size} dot className={className}>
-          Payment Pending
+          PAYMENT PENDING
         </Badge>
       );
     case "PAYMENT_FAILED":
     case "FAILED":
       return (
         <Badge variant="danger" size={size} dot className={className}>
-          Payment Failed
+          PAYMENT FAILED
         </Badge>
       );
     case "REJECTED":
       return (
         <Badge variant="danger" size={size} dot className={className}>
-          Rejected
+          REJECTED
         </Badge>
       );
     case "CANCELLED":
       return (
         <Badge variant="outline" size={size} className={className}>
-          Cancelled
+          CANCELLED
         </Badge>
       );
     case "REFUNDED":
       return (
         <Badge variant="warning" size={size} dot className={className}>
-          Refunded
+          REFUNDED
         </Badge>
       );
     case "DRAFT":
@@ -67,7 +67,7 @@ export function StatusBadge({
     default:
       return (
         <Badge variant="default" size={size} className={className}>
-          {status || "Draft"}
+          {status || "DRAFT"}
         </Badge>
       );
   }

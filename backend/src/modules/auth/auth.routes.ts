@@ -4,7 +4,7 @@ import { validate } from "../../middleware/validate.js";
 import { authMiddleware } from "../../middleware/auth.js";
 import { authRateLimiter } from "../../middleware/rateLimiters.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
-import { registerSchema, loginSchema, refreshSchema } from "./auth.schemas.js";
+import { registerSchema, loginSchema, refreshSchema, updateProfileSchema } from "./auth.schemas.js";
 
 export const authRouter = Router();
 
@@ -26,6 +26,13 @@ authRouter.get(
   "/me",
   authMiddleware,
   asyncHandler(AuthController.me)
+);
+
+authRouter.patch(
+  "/profile",
+  authMiddleware,
+  validate({ body: updateProfileSchema }),
+  asyncHandler(AuthController.updateProfile)
 );
 
 authRouter.post(

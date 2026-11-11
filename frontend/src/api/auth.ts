@@ -16,6 +16,22 @@ export interface LoginPayload {
   password: string;
 }
 
+export interface UpdateProfilePayload {
+  name?: string;
+  email?: string;
+  currentPassword?: string;
+  newPassword?: string;
+  businessName?: string;
+  businessType?: string;
+  city?: string;
+  gstin?: string;
+  monthlyBudgetPaise?: number;
+  preferences?: {
+    priority?: "cheapest" | "reliable" | "balanced" | "fastest";
+    minReliability?: number;
+  };
+}
+
 export interface AuthResponseData {
   user: User;
   business: Business;
@@ -32,6 +48,9 @@ export const authApi = {
 
   getMe: () =>
     apiClient.get<unknown, { user: User; business: Business }>("/auth/me"),
+
+  updateProfile: (payload: UpdateProfilePayload) =>
+    apiClient.patch<unknown, { user: User; business: Business }>("/auth/profile", payload),
 
   logout: () => apiClient.post<unknown, { message: string }>("/auth/logout"),
 };

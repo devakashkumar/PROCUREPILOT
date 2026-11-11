@@ -4,29 +4,29 @@ import { cn } from "../../lib/cn.js";
 import { Loader2 } from "lucide-react";
 
 export const buttonVariants = cva(
-  "relative inline-flex items-center justify-center font-bold tracking-tight transition-all select-none overflow-hidden active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none cursor-pointer",
+  "relative inline-flex items-center justify-center text-center font-semibold tracking-tight transition-all duration-200 select-none overflow-hidden active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none cursor-pointer rounded-[8px]",
   {
     variants: {
       variant: {
         primary:
-          "bg-ink text-background hover:bg-ink/90 group rounded-[12px] shadow-sm",
+          "bg-ink text-background font-bold hover:opacity-90 hover:shadow-[0_0_25px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_0_25px_rgba(255,255,255,0.2)] border border-ink",
         secondary:
-          "bg-surface text-ink border border-border hover:border-ink rounded-[12px]",
+          "bg-surface text-ink border border-border hover:border-border-strong hover:bg-surface-elevated",
         accent:
-          "bg-accent text-accent-ink font-extrabold hover:bg-accent/90 rounded-[12px] shadow-sm",
+          "bg-ink text-background font-extrabold hover:opacity-90 hover:shadow-[0_0_25px_rgba(0,0,0,0.2)] dark:hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] border border-ink",
         ghost:
-          "text-ink hover:bg-subtle rounded-[12px]",
+          "text-muted hover:text-ink hover:bg-black/5 dark:hover:bg-white/[0.05]",
         danger:
-          "bg-danger text-white hover:bg-danger/90 rounded-[12px]",
+          "bg-rose-950/20 text-rose-500 dark:text-rose-200 border border-rose-500/30 hover:bg-rose-900/30 hover:border-rose-500/50",
         outline:
-          "border border-border text-ink hover:border-ink rounded-[12px]",
+          "border border-border bg-transparent text-ink hover:border-border-strong hover:bg-surface-elevated",
       },
       size: {
-        default: "h-14 px-6 text-base font-bold",
-        sm: "h-10 px-4 text-sm font-semibold",
-        md: "h-12 px-5 text-sm font-semibold",
-        lg: "h-16 px-8 text-lg font-extrabold",
-        icon: "h-11 w-11 p-0",
+        default: "min-h-[44px] h-auto py-2.5 px-5 text-sm",
+        sm: "min-h-[36px] h-auto py-1.5 px-3.5 text-xs font-medium",
+        md: "min-h-[40px] h-auto py-2 px-4 text-sm font-medium",
+        lg: "min-h-[48px] h-auto py-3 px-6 text-base font-bold",
+        icon: "h-9 w-9 p-0",
       },
     },
     defaultVariants: {
@@ -53,10 +53,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {isLoading && (
           <span className="absolute inset-0 flex items-center justify-center bg-inherit">
-            <Loader2 className="h-5 w-5 animate-spin" />
+            <Loader2 className="h-4 w-4 animate-spin" />
           </span>
         )}
-        <span className={cn("inline-flex items-center gap-2", isLoading && "opacity-0")}>
+        <span className={cn("inline-flex items-center justify-center gap-2 max-w-full flex-wrap", isLoading && "opacity-0")}>
           {children}
         </span>
       </button>

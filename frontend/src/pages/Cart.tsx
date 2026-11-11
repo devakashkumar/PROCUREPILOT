@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ShoppingCart, ArrowRight, Trash2, Plus, Minus, Sparkles, Building2 } from "lucide-react";
+import { ShoppingCart, Trash2, Plus, Minus, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "../components/ui/Button.js";
 import { formatPaise } from "../lib/format.js";
@@ -21,7 +21,7 @@ const DEFAULT_CART_ITEMS: CartItem[] = [
     name: "Fortune Refined Cooking Oil",
     supplier: "Bharat Wholesalers",
     unit: "L",
-    unitPricePaise: 14000, // ₹140
+    unitPricePaise: 14000,
     quantity: 20,
   },
   {
@@ -29,7 +29,7 @@ const DEFAULT_CART_ITEMS: CartItem[] = [
     name: "Daawat Basmati Everyday Rice",
     supplier: "National FMCG Distributors",
     unit: "kg",
-    unitPricePaise: 9500, // ₹95
+    unitPricePaise: 9500,
     quantity: 30,
   },
   {
@@ -37,7 +37,7 @@ const DEFAULT_CART_ITEMS: CartItem[] = [
     name: "Surf Excel Quick Wash Detergent",
     supplier: "Bharat Wholesalers",
     unit: "kg",
-    unitPricePaise: 21000, // ₹210
+    unitPricePaise: 21000,
     quantity: 15,
   },
 ];
@@ -79,12 +79,12 @@ export const Cart: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      <div className="border-b border-border/60 pb-5">
-        <div className="flex items-center gap-2 text-xs font-mono font-semibold text-accent uppercase tracking-wider">
-          <ShoppingCart className="h-3.5 w-3.5" />
+      <div className="border-b border-border pb-6">
+        <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-muted">
+          <ShoppingCart className="h-3.5 w-3.5 text-muted" />
           <span>Restock Line Item Customization</span>
         </div>
-        <h1 className="mt-1 font-heading text-2xl sm:text-3xl font-extrabold text-ink">
+        <h1 className="mt-1 text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
           Custom Purchase Cart
         </h1>
         <p className="mt-0.5 text-xs text-muted">
@@ -93,58 +93,58 @@ export const Cart: React.FC = () => {
       </div>
 
       {items.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-border bg-card p-12 text-center">
-          <ShoppingCart className="mx-auto h-12 w-12 text-muted/60" />
-          <h3 className="mt-4 font-heading text-lg font-bold text-ink">Cart is empty</h3>
+        <div className="rounded-[12px] border border-dashed border-border bg-surface p-12 text-center">
+          <ShoppingCart className="mx-auto h-10 w-10 text-muted" />
+          <h3 className="mt-4 text-base font-bold text-ink">Cart is empty</h3>
           <p className="mt-1 text-xs text-muted">Use natural language procurement to generate an optimized basket.</p>
           <Link to="/procure" className="mt-6 inline-block">
-            <Button variant="accent" size="md" className="gap-2 font-bold">
-              <Sparkles className="h-4 w-4" /> Go to Procurement Agent
+            <Button variant="primary" size="md" className="gap-2 font-bold text-xs">
+              <Sparkles className="h-3.5 w-3.5" /> Launch Procurement Agent
             </Button>
           </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-start">
           {/* Items list */}
-          <div className="rounded-2xl border border-border bg-card p-6 shadow-sm lg:col-span-8">
-            <h3 className="font-heading text-base font-bold text-ink border-b border-border/60 pb-4">
-              Line Items ({items.length})
+          <div className="rounded-[12px] border border-border bg-surface p-6 shadow-sm lg:col-span-8">
+            <h3 className="text-sm font-bold text-ink tracking-tight border-b border-border pb-4">
+              Restock Lines ({items.length})
             </h3>
-            <div className="divide-y divide-border/60">
+            <div className="divide-y divide-border">
               {items.map((item) => (
                 <div key={item.id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
                     <h4 className="font-bold text-sm text-ink">{item.name}</h4>
-                    <div className="flex items-center gap-3 mt-1 text-xs text-muted">
+                    <div className="flex items-center gap-3 mt-1 text-xs text-muted font-mono">
                       <span>Supplier: <strong className="text-ink">{item.supplier}</strong></span>
-                      <span>Rate: <strong className="font-mono text-ink">{formatPaise(item.unitPricePaise)}</strong> / {item.unit}</span>
+                      <span>Rate: <strong className="text-ink tabular-nums">{formatPaise(item.unitPricePaise)}</strong> / {item.unit}</span>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between sm:justify-end gap-6">
                     {/* Stepper */}
-                    <div className="flex items-center gap-2 rounded-xl border border-border bg-card-subtle p-1">
+                    <div className="flex items-center gap-1.5 rounded-[6px] border border-border bg-surface-elevated p-1">
                       <button
                         type="button"
                         onClick={() => updateQuantity(item.id, -1)}
-                        className="flex h-7 w-7 items-center justify-center rounded-lg hover:bg-card text-ink transition"
+                        className="flex h-6 w-6 items-center justify-center rounded-[4px] hover:bg-black/5 dark:hover:bg-white/[0.08] text-ink transition cursor-pointer"
                       >
-                        <Minus className="h-3.5 w-3.5" />
+                        <Minus className="h-3 w-3" />
                       </button>
-                      <span className="w-8 text-center font-mono text-sm font-bold text-ink">
+                      <span className="w-8 text-center font-mono text-xs font-bold text-ink tabular-nums">
                         {item.quantity}
                       </span>
                       <button
                         type="button"
                         onClick={() => updateQuantity(item.id, 1)}
-                        className="flex h-7 w-7 items-center justify-center rounded-lg hover:bg-card text-ink transition"
+                        className="flex h-6 w-6 items-center justify-center rounded-[4px] hover:bg-black/5 dark:hover:bg-white/[0.08] text-ink transition cursor-pointer"
                       >
-                        <Plus className="h-3.5 w-3.5" />
+                        <Plus className="h-3 w-3" />
                       </button>
                     </div>
 
-                    <div className="text-right min-w-[5rem]">
-                      <span className="font-mono text-sm font-bold text-ink">
+                    <div className="text-right min-w-[80px]">
+                      <span className="font-mono text-sm font-bold text-ink tabular-nums block">
                         {formatPaise(item.unitPricePaise * item.quantity)}
                       </span>
                     </div>
@@ -152,8 +152,8 @@ export const Cart: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => removeItem(item.id)}
-                      className="text-muted hover:text-rose-500 transition p-1"
-                      title="Remove line"
+                      className="text-muted hover:text-rose-500 transition-colors p-1"
+                      title="Remove item"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -163,42 +163,38 @@ export const Cart: React.FC = () => {
             </div>
           </div>
 
-          {/* Summary Box */}
-          <div className="rounded-2xl border border-border bg-card p-6 shadow-sm lg:col-span-4 sticky top-6 space-y-5">
-            <h3 className="font-heading text-base font-bold text-ink border-b border-border/60 pb-3">
-              Order Estimate
+          {/* Cart Summary */}
+          <div className="rounded-[12px] border border-border bg-surface p-6 shadow-sm lg:col-span-4 sticky top-6 space-y-4">
+            <h3 className="text-sm font-bold text-ink tracking-tight border-b border-border pb-3">
+              Estimated Order Summary
             </h3>
 
-            <div className="space-y-2 text-xs">
+            <div className="space-y-2.5 text-xs font-mono">
               <div className="flex justify-between text-muted">
-                <span>Subtotal ({items.length} items)</span>
-                <span className="font-mono font-medium text-ink">{formatPaise(subtotalPaise)}</span>
+                <span>Items Subtotal</span>
+                <span className="font-medium text-ink tabular-nums">{formatPaise(subtotalPaise)}</span>
               </div>
               <div className="flex justify-between text-muted">
-                <span>Estimated Freight & Shipping</span>
-                <span className="font-mono font-medium text-ink">
+                <span>Estimated Freight</span>
+                <span className="font-medium text-ink tabular-nums">
                   {estimatedShippingPaise === 0 ? "FREE" : formatPaise(estimatedShippingPaise)}
                 </span>
               </div>
-              <div className="border-t border-border/60 pt-3 flex justify-between text-sm font-bold text-ink">
-                <span>Estimated Authoritative Total</span>
-                <span className="font-mono text-base text-accent">{formatPaise(totalPaise)}</span>
+              <div className="border-t border-border pt-3 flex justify-between text-sm font-bold text-ink">
+                <span>Estimated Total</span>
+                <span className="text-base text-ink tabular-nums">{formatPaise(totalPaise)}</span>
               </div>
             </div>
 
             <Button
-              type="button"
-              variant="accent"
+              variant="primary"
               size="lg"
-              className="w-full gap-2 font-bold shadow-md shadow-accent/20"
               onClick={handleProceedToProcure}
+              className="w-full gap-2 font-bold text-xs h-11 mt-2 shadow-sm"
             >
               <Sparkles className="h-4 w-4" />
-              Re-optimize with Agent
+              Optimize With Knapsack Solver
             </Button>
-            <p className="text-[11px] text-center text-muted">
-              Sends itemized demands directly to knapsack solver with live vendor pricing.
-            </p>
           </div>
         </div>
       )}

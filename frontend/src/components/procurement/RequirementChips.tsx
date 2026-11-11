@@ -1,7 +1,6 @@
 import { ProcurementRequirements } from "../../types/api.js";
 import { formatInr } from "../../lib/format.js";
-import { Badge } from "../ui/Badge.js";
-import { HelpCircle, Edit3 } from "lucide-react";
+import { Edit3 } from "lucide-react";
 
 interface RequirementChipsProps {
   requirements: ProcurementRequirements;
@@ -10,20 +9,21 @@ interface RequirementChipsProps {
 
 export function RequirementChips({ requirements, onEdit }: RequirementChipsProps) {
   return (
-    <div className="flex flex-col gap-3 p-4 rounded-[20px] bg-surface border border-border">
-      <div className="flex items-center justify-between">
+    <div className="flex flex-col gap-3 p-5 rounded-[12px] bg-surface border border-border">
+      <div className="flex items-center justify-between border-b border-border pb-3">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-muted">
-            Parsed Requirements
+          <span className="text-[11px] font-mono uppercase tracking-widest text-muted">
+            Extracted Requirements
           </span>
-          <Badge variant="accent" className="text-[10px]">
-            AI Extracted
-          </Badge>
+          <span className="font-mono text-[9px] uppercase tracking-wider text-muted border border-border px-1 py-0.2 rounded-[3px]">
+            SCHEMA VALIDATED
+          </span>
         </div>
         {onEdit && (
           <button
             onClick={onEdit}
-            className="flex items-center gap-1 text-xs font-bold text-muted hover:text-ink transition-colors cursor-pointer"
+            type="button"
+            className="flex items-center gap-1 text-xs font-mono text-muted hover:text-ink transition-colors cursor-pointer"
           >
             <Edit3 className="h-3 w-3" />
             <span>Edit</span>
@@ -31,44 +31,31 @@ export function RequirementChips({ requirements, onEdit }: RequirementChipsProps
         )}
       </div>
 
-      {/* Items Chips */}
-      <div className="flex flex-wrap items-center gap-2">
+      {/* Items Metadata List - Clean Unboxed Discipline */}
+      <div className="flex flex-wrap items-center gap-2.5 pt-1">
         {requirements.items.map((item, idx) => (
           <div
             key={idx}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-subtle border border-border text-xs font-bold text-ink"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] bg-surface-elevated border border-border text-xs text-ink"
           >
-            <span className="font-mono text-accent-ink bg-accent px-1.5 py-0.2 rounded-full text-[10px]">
+            <span className="font-mono text-xs font-bold text-ink bg-neutral-200 dark:bg-white/10 px-1.5 py-0.2 rounded-[3px] tabular-nums">
               {item.quantity} {item.unit || "units"}
             </span>
-            <span>{item.name}</span>
+            <span className="font-medium">{item.name}</span>
           </div>
         ))}
 
         {requirements.budget.amountPaise && (
-          <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-ink text-background text-xs font-bold">
+          <div className="flex items-center gap-1 px-2.5 py-1 rounded-[4px] bg-surface-elevated border border-border text-xs font-mono text-ink">
             <span className="text-muted">Budget:</span>
-            <span className="font-mono">{formatInr(requirements.budget.amountPaise)}</span>
+            <span className="font-bold tabular-nums">{formatInr(requirements.budget.amountPaise)}</span>
           </div>
         )}
 
-        <Badge variant="outline" className="capitalize">
-          Priority: {requirements.priority}
-        </Badge>
-      </div>
-
-      {/* Clarifications if any */}
-      {requirements.clarifications && requirements.clarifications.length > 0 && (
-        <div className="mt-2 p-3 rounded-[12px] bg-warning/10 border border-warning/30 flex items-start gap-2 text-xs font-semibold text-ink">
-          <HelpCircle className="h-4 w-4 text-warning shrink-0 mt-0.5" />
-          <div className="flex flex-col gap-1">
-            <span className="font-bold text-warning">Clarification needed from owner:</span>
-            {requirements.clarifications.map((q, idx) => (
-              <span key={idx}>• {q}</span>
-            ))}
-          </div>
+        <div className="px-2 py-0.5 text-xs font-mono uppercase tracking-wider text-muted">
+          Priority: <span className="text-ink font-bold">{requirements.priority}</span>
         </div>
-      )}
+      </div>
     </div>
   );
 }
