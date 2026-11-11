@@ -191,21 +191,39 @@ export class PaymentController {
 
       if (captureStatus === "COMPLETED") {
         // --- STRICT SERVER-SIDE VERIFICATION ---
-        const capturedAmountUsd = parseFloat(capture?.amount?.value || "0");
-        const storedAmountUsd = payment.amountUsdCents / 100;
+// --- STRICT SERVER-SIDE PAYMENT VERIFICATION ---
 
-        // Verify captured amount equals stored amount (within 0.01 tolerance)
-        if (Math.abs(capturedAmountUsd - storedAmountUsd) > 0.01 && capturedAmountUsd > 0) {
-          logger.error(
-            { capturedAmountUsd, storedAmountUsd },
-            "Captured amount mismatch with stored payment amount"
-          );
-          throw new ApiError(
-            400,
-            ERROR_CODES.PAYMENT_ERROR,
-            "Captured payment amount does not match authoritative purchase order amount"
-          );
-        }
+const capturedAmountValue = capture?.amount?.value;
+const capturedCurrency = capture?.amount?.currency_code;
+const capturedAmountUsd = Number(capturedAmountValue);
+const storedAmountUsdCents = payment.amountUsdCents;
+
+if (
+  !capture ||
+  !capture.id ||
+  capturedCurrency !== "USD" ||
+  !Number.isFinite(capturedAmountUsd) ||
+  capturedAmountUsd <= 0 ||
+  storedAmountUsdCents <= 0 ||
+  Math.round(capturedAmountUsd * 100) !== storedAmountUsdCents
+) {
+  logger.error(
+    {
+      captureId: capture?.id,
+      capturedAmountUsd,
+      capturedCurrency,
+      storedAmountUsdCents,
+    },
+    "PayPal capture verification failed"
+  );
+
+  throw new ApiError(
+    400,
+    ERROR_CODES.PAYMENT_ERROR,
+    "Captured payment amount or currency does not match the authoritative payment record"
+  );
+}
+
 
         payment.paypalCaptureId = capture?.id || captureResult.id;
         payment.status = PAYMENT_STATUS.COMPLETED;
