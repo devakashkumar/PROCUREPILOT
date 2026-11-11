@@ -13,20 +13,20 @@ export function SupplierGroupCard({ group, lines }: SupplierGroupCardProps) {
   );
 
   return (
-    <div className="card-sharp p-6 bg-surface border border-border rounded-[20px] flex flex-col gap-4">
+    <div className="p-5 sm:p-6 bg-surface border border-border rounded-[12px] flex flex-col gap-4 shadow-sm">
       {/* Group Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-border gap-2">
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-full bg-subtle flex items-center justify-center text-ink">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3.5 border-b border-border gap-3">
+        <div className="flex items-center gap-3">
+          <div className="h-8 w-8 rounded-[6px] bg-surface-elevated border border-border flex items-center justify-center text-ink">
             <Building2 className="h-4 w-4" />
           </div>
           <div>
-            <h4 className="text-base font-extrabold text-ink tracking-tight">{group.supplierName}</h4>
-            <div className="flex items-center gap-2 text-xs text-muted">
+            <h4 className="text-sm font-bold text-ink tracking-tight">{group.supplierName}</h4>
+            <div className="flex items-center gap-2 text-[11px] font-mono text-muted mt-0.5">
               <span className="flex items-center gap-1">
-                <Truck className="h-3 w-3" /> Est. {group.deliveryDays} day(s) delivery
+                <Truck className="h-3 w-3" /> Est. {group.deliveryDays}d delivery
               </span>
-              <span>•</span>
+              <span>·</span>
               <span className="flex items-center gap-1">
                 <Package className="h-3 w-3" /> {group.lineCount} item(s)
               </span>
@@ -34,28 +34,28 @@ export function SupplierGroupCard({ group, lines }: SupplierGroupCardProps) {
           </div>
         </div>
 
-        <div className="text-right">
-          <div className="text-sm font-bold font-mono text-ink">
+        <div className="text-left sm:text-right font-mono">
+          <div className="text-sm font-bold text-ink tabular-nums">
             {formatInr(group.subtotalPaise + group.shippingPaise)}
           </div>
-          <div className="text-[11px] text-muted">
+          <div className="text-[10px] uppercase tracking-wider text-muted">
             Shipping: {group.shippingPaise === 0 ? "FREE" : formatInr(group.shippingPaise)}
           </div>
         </div>
       </div>
 
       {/* Lines Table */}
-      <div className="flex flex-col divide-y divide-border/50">
+      <div className="flex flex-col divide-y divide-border">
         {groupLines.map((line, idx) => (
           <div key={idx} className="py-2.5 flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs font-bold text-accent-ink bg-accent/60 px-1.5 py-0.5 rounded">
+              <span className="font-mono text-xs font-bold text-ink bg-neutral-200 dark:bg-white/10 px-1.5 py-0.2 rounded-[3px] tabular-nums">
                 {line.quantity}x
               </span>
               <span className="font-semibold text-ink">{line.productName}</span>
-              <span className="text-muted">({formatInr(line.unitPricePaise)} / {line.unit})</span>
+              <span className="text-muted font-mono text-[11px]">({formatInr(line.unitPricePaise)} / {line.unit})</span>
             </div>
-            <span className="font-mono font-bold text-ink">{formatInr(line.lineTotalPaise)}</span>
+            <span className="font-mono font-bold text-ink tabular-nums">{formatInr(line.lineTotalPaise)}</span>
           </div>
         ))}
       </div>

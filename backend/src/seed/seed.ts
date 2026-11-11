@@ -67,7 +67,7 @@ export async function runSeed(reset = false): Promise<void> {
   logger.info("Upserting catalog products...");
   const productDocs = [];
   for (const p of SEED_PRODUCTS) {
-    const imageUrl = getProductImage(p.name, p.category, dummyImages);
+    const imageUrl = getProductImage(p.name, p.category, dummyImages, p.slug);
     const doc = await Product.findOneAndUpdate(
       { slug: p.slug },
       {

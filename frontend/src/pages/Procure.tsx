@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Sparkles, ArrowRight, RotateCcw, AlertTriangle, CheckCircle2, ShieldCheck, ShoppingCart } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Sparkles, RotateCcw, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import {
   ProcurementStrategy,
@@ -19,7 +19,6 @@ import { StrategySwitcher } from "../components/procurement/StrategySwitcher.js"
 import { ExplanationPanel } from "../components/procurement/ExplanationPanel.js";
 import { SupplierMatrix } from "../components/procurement/SupplierMatrix.js";
 import { Button } from "../components/ui/Button.js";
-import { Badge } from "../components/ui/Badge.js";
 
 type PipelineStage = "idle" | "running" | "complete";
 
@@ -52,6 +51,8 @@ const INITIAL_STEPS: TimelineStep[] = [
 
 export const Procure: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const prefill = searchParams.get("prefill") || "";
 
   const [stage, setStage] = useState<PipelineStage>("idle");
   const [steps, setSteps] = useState<TimelineStep[]>(INITIAL_STEPS);
@@ -120,10 +121,10 @@ export const Procure: React.FC = () => {
       setCurrentStepId(4);
       updateStep(4, "completed", "Plan synthesized successfully");
 
-      // Transition to complete after brief moment
+      // Transition to complete
       setTimeout(() => {
         setStage("complete");
-      }, 600);
+      }, 500);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Pipeline failed to execute";
       toast.error(message);
@@ -189,14 +190,14 @@ export const Procure: React.FC = () => {
   return (
     <div className="space-y-8">
       {/* Title Bar */}
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-border/60 pb-5">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-border pb-6">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono font-semibold text-accent uppercase tracking-wider">
-            <Sparkles className="h-3.5 w-3.5" />
+          <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-muted">
+            <Sparkles className="h-3.5 w-3.5 text-muted" />
             <span>Autonomous Purchasing Agent</span>
           </div>
-          <h1 className="mt-1 font-heading text-2xl sm:text-3xl font-extrabold text-ink">
-            Smart Procurement Pipeline
+          <h1 className="mt-1 text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
+            Procurement Pipeline
           </h1>
           <p className="mt-0.5 text-xs text-muted">
             Translate conversational restock requests into mathematically optimized purchase orders.
@@ -209,7 +210,7 @@ export const Procure: React.FC = () => {
             variant="outline"
             size="sm"
             onClick={handleReset}
-            className="gap-1.5 self-start sm:self-auto"
+            className="gap-1.5 self-start sm:self-auto font-mono text-xs"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             New Sourcing Request
@@ -220,7 +221,11 @@ export const Procure: React.FC = () => {
       {/* Stage 1: Idle - Big Command Bar */}
       {stage === "idle" && (
         <div className="py-8">
-          <CommandBar onSubmit={handleStartPipeline} isLoading={false} />
+          <CommandBar
+            onSubmit={handleStartPipeline}
+            isLoading={false}
+            initialValue={prefill}
+          />
         </div>
       )}
 
@@ -228,8 +233,8 @@ export const Procure: React.FC = () => {
       {stage === "running" && (
         <div className="py-12">
           <div className="text-center mb-8">
-            <h3 className="font-heading text-xl font-bold text-ink">Agent Sourcing in Progress</h3>
-            <p className="text-xs text-muted mt-1">Executing AI extraction, catalog lookups, and knapsack DP</p>
+            <h3 className="text-xl font-bold text-ink tracking-tight">Agent Sourcing in Progress</h3>
+            <p className="text-xs text-muted mt-1 font-mono">Executing AI extraction, catalog lookups, and knapsack DP</p>
           </div>
           <AgentTimeline steps={steps} currentStepId={currentStepId} />
         </div>
@@ -245,12 +250,12 @@ export const Procure: React.FC = () => {
 
             {/* Warnings Alert Banner */}
             {warnings.length > 0 && (
-              <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-xs text-amber-800 dark:text-amber-300 space-y-1">
-                <div className="flex items-center gap-2 font-bold">
-                  <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
-                  <span>Optimization Notes & Constraints:</span>
+              <div className="rounded-[10px] border border-amber-500/30 bg-amber-500/10 p-4 text-xs text-amber-600 dark:text-amber-200 space-y-1">
+                <div className="flex items-center gap-2 font-mono font-bold text-amber-600 dark:text-amber-400">
+                  <AlertTriangle className="h-4 w-4 shrink-0" />
+                  <span>OPTIMIZATION CONSTRAINTS & NOTES:</span>
                 </div>
-                <ul className="list-disc pl-6 space-y-0.5 text-muted">
+                <ul className="list-disc pl-6 space-y-0.5 text-ink/80 font-sans">
                   {warnings.map((w, i) => (
                     <li key={i}>{w}</li>
                   ))}
@@ -259,56 +264,56 @@ export const Procure: React.FC = () => {
             )}
 
             {/* Recommended Products Table */}
-            <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-              <div className="flex items-center justify-between border-b border-border/60 pb-4">
+            <div className="rounded-[12px] border border-border bg-surface p-6 shadow-sm">
+              <div className="flex items-center justify-between border-b border-border pb-4">
                 <div>
-                  <h3 className="font-heading text-base font-bold text-ink">
+                  <h3 className="text-sm font-bold text-ink tracking-tight">
                     Optimized Supplier Basket
                   </h3>
-                  <p className="text-xs text-muted">
-                    {plan.lines.length} items allocated across {plan.supplierGroups.length} wholesale suppliers
+                  <p className="text-xs text-muted mt-0.5">
+                    {plan.lines.length} items allocated across {plan.supplierGroups.length} wholesale distributors
                   </p>
                 </div>
-                <Badge variant="accent" className="font-mono text-xs">
-                  {strategy.toUpperCase()}
-                </Badge>
+                <span className="font-mono text-xs uppercase tracking-wider text-ink border border-border px-2 py-0.5 rounded-[4px] bg-surface-elevated">
+                  {strategy}
+                </span>
               </div>
 
               <div className="mt-4 overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="border-b border-border text-muted uppercase tracking-wider font-semibold">
+                  <thead className="border-b border-border text-muted uppercase tracking-wider font-mono text-[10px]">
                     <tr>
                       <th className="py-2.5 px-3">Item</th>
                       <th className="py-2.5 px-3">Supplier</th>
                       <th className="py-2.5 px-3 text-center">Qty</th>
-                      <th className="py-2.5 px-3">Wholesale Rate</th>
-                      <th className="py-2.5 px-3">Lead Time</th>
+                      <th className="py-2.5 px-3">Rate</th>
+                      <th className="py-2.5 px-3">Delivery</th>
                       <th className="py-2.5 px-3 text-right">Line Total</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-border/60 font-medium">
+                  <tbody className="divide-y divide-border">
                     {plan.lines.map((line, idx) => (
-                      <tr key={idx} className="hover:bg-card-subtle/40 transition-colors">
+                      <tr key={idx} className="hover:bg-surface-elevated transition-colors">
                         <td className="py-3 px-3">
                           <span className="font-bold text-ink">{line.productName}</span>
-                          <span className="text-[11px] text-muted block">Unit: {line.unit}</span>
+                          <span className="text-[11px] font-mono text-muted block">Unit: {line.unit}</span>
                         </td>
                         <td className="py-3 px-3">
-                          <span className="text-ink font-semibold">{line.supplierName}</span>
-                          <span className="text-[11px] text-emerald-600 dark:text-emerald-400 block">
+                          <span className="text-ink font-medium">{line.supplierName}</span>
+                          <span className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 block">
                             ★ {line.reliabilityScore}% reliability
                           </span>
                         </td>
-                        <td className="py-3 px-3 text-center font-mono font-bold text-ink">
+                        <td className="py-3 px-3 text-center font-mono font-bold text-ink tabular-nums">
                           {line.quantity}
                         </td>
-                        <td className="py-3 px-3 font-mono text-muted">
+                        <td className="py-3 px-3 font-mono text-muted tabular-nums">
                           {formatPaise(line.unitPricePaise)}
                         </td>
-                        <td className="py-3 px-3 text-muted">
+                        <td className="py-3 px-3 text-muted font-mono">
                           {line.deliveryDays} {line.deliveryDays === 1 ? "day" : "days"}
                         </td>
-                        <td className="py-3 px-3 text-right font-mono font-bold text-ink">
+                        <td className="py-3 px-3 text-right font-mono font-bold text-ink tabular-nums">
                           {formatPaise(line.lineTotalPaise)}
                         </td>
                       </tr>
@@ -329,8 +334,8 @@ export const Procure: React.FC = () => {
           {/* Right Column: BudgetMeter, StrategySwitcher, ExplanationPanel */}
           <div className="space-y-6 lg:col-span-4 sticky top-6">
             {/* Strategy Switcher */}
-            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted mb-3 block">
+            <div className="rounded-[12px] border border-border bg-surface p-5 shadow-sm">
+              <span className="text-[11px] font-mono uppercase tracking-widest text-muted mb-3 block">
                 Optimization Priority
               </span>
               <StrategySwitcher

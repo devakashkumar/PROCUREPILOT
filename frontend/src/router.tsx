@@ -15,6 +15,7 @@ import { PaymentResult } from "./pages/PaymentResult.js";
 import { Products } from "./pages/Products.js";
 import { Suppliers } from "./pages/Suppliers.js";
 import { Analytics } from "./pages/Analytics.js";
+import { Settings } from "./pages/Settings.js";
 import { NotFound } from "./pages/NotFound.js";
 
 // Protected Route Wrapper
@@ -109,6 +110,10 @@ export const router = createBrowserRouter([
       {
         path: "analytics",
         element: <Analytics />,
+      },
+      {
+        path: "settings",
+        element: <Settings />,
       },
       {
         path: "*",

@@ -8,6 +8,7 @@ import {
   Package,
   Building2,
   BarChart3,
+  Settings as SettingsIcon,
   LogOut,
 } from "lucide-react";
 import { useAuthStore } from "../../store/authStore.js";
@@ -21,6 +22,7 @@ const navItems = [
   { label: "Products", href: "/products", icon: Package },
   { label: "Suppliers", href: "/suppliers", icon: Building2 },
   { label: "Analytics", href: "/analytics", icon: BarChart3 },
+  { label: "Settings", href: "/settings", icon: SettingsIcon },
 ];
 
 export function Sidebar({ className }: { className?: string }) {
@@ -30,18 +32,16 @@ export function Sidebar({ className }: { className?: string }) {
   return (
     <aside
       className={cn(
-        "hidden md:flex flex-col justify-between w-64 border-r border-border bg-surface h-screen sticky top-0 px-4 py-6 select-none",
+        "hidden md:flex flex-col justify-between w-60 border-r border-border bg-background-obsidian h-screen sticky top-0 px-3.5 py-5 select-none",
         className
       )}
     >
       <div>
         {/* Brand Header */}
-        <Link to="/dashboard" className="flex items-center gap-2 px-3 mb-8 group">
-          <div className="h-8 w-8 rounded-lg bg-ink flex items-center justify-center text-accent font-extrabold text-xl">
-            P
-          </div>
-          <span className="text-xl font-extrabold tracking-tight text-ink">
-            ProcurePilot<span className="text-accent text-2xl leading-none">.</span>
+        <Link to="/dashboard" className="flex items-center gap-2.5 px-2.5 mb-7 group">
+          <img src="/logo.png" alt="ProcurePilot" className="h-7 w-7 object-contain" />
+          <span className="text-base font-extrabold tracking-tight text-ink">
+            ProcurePilot
           </span>
         </Link>
 
@@ -56,31 +56,31 @@ export function Sidebar({ className }: { className?: string }) {
                 key={item.href}
                 to={item.href}
                 className={cn(
-                  "relative flex items-center gap-3 px-4 py-3 rounded-[12px] text-sm font-semibold transition-colors duration-150",
+                  "relative flex items-center gap-2.5 px-3 py-2 rounded-[6px] text-xs font-medium transition-all duration-150",
                   isActive
-                    ? "text-ink font-bold"
-                    : "text-muted hover:text-ink hover:bg-subtle",
-                  item.highlight && !isActive && "text-ink"
+                    ? "text-ink font-semibold"
+                    : "text-muted hover:text-ink hover:bg-black/5 dark:hover:bg-white/[0.03]",
+                  item.highlight && !isActive && "text-ink/80"
                 )}
               >
                 {isActive && (
                   <motion.div
                     layoutId="sidebar-active-indicator"
-                    className="absolute inset-0 rounded-[12px] bg-subtle border border-border"
+                    className="absolute inset-0 rounded-[6px] bg-neutral-200/50 dark:bg-white/[0.06] border border-border"
                     transition={{ type: "spring", stiffness: 350, damping: 30 }}
                   />
                 )}
                 <Icon
                   className={cn(
-                    "relative z-10 h-5 w-5",
+                    "relative z-10 h-4 w-4",
                     isActive ? "text-ink" : "text-muted",
-                    item.highlight && "text-accent-ink"
+                    item.highlight && isActive ? "text-ink" : ""
                   )}
-                  strokeWidth={2.25}
+                  strokeWidth={2}
                 />
                 <span className="relative z-10">{item.label}</span>
                 {item.highlight && (
-                  <span className="relative z-10 ml-auto px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-accent text-accent-ink uppercase">
+                  <span className="relative z-10 ml-auto font-mono text-[9px] uppercase tracking-widest text-muted">
                     AI
                   </span>
                 )}
@@ -90,22 +90,20 @@ export function Sidebar({ className }: { className?: string }) {
         </nav>
       </div>
 
-      {/* Business profile and logout */}
-      <div className="pt-4 border-t border-border flex flex-col gap-2">
+      {/* Business Account & Sign Out footer */}
+      <div className="border-t border-border pt-4 px-2">
         {business && (
-          <div className="px-3 py-2 rounded-[12px] bg-subtle">
-            <div className="text-xs font-bold text-ink truncate">{business.name}</div>
-            <div className="text-[11px] font-medium text-muted capitalize truncate">
-              {business.city} • {business.type}
-            </div>
+          <div className="mb-3">
+            <div className="text-xs font-semibold text-ink truncate">{business.name}</div>
+            <div className="text-[10px] font-mono text-muted uppercase tracking-wider">{business.type}</div>
           </div>
         )}
         <button
           onClick={logout}
-          className="flex items-center gap-3 px-4 py-2.5 rounded-[12px] text-sm font-semibold text-muted hover:text-danger hover:bg-danger/10 transition-colors cursor-pointer"
+          className="flex items-center gap-2 w-full px-2 py-1.5 rounded-[6px] text-xs font-medium text-muted hover:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
         >
-          <LogOut className="h-4 w-4" strokeWidth={2.25} />
-          <span>Log out</span>
+          <LogOut className="h-3.5 w-3.5" />
+          <span>Sign Out</span>
         </button>
       </div>
     </aside>

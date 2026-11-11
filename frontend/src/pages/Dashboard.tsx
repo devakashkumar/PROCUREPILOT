@@ -5,17 +5,13 @@ import {
   ArrowRight,
   TrendingDown,
   TrendingUp,
-  CreditCard,
   ShoppingBag,
   IndianRupee,
-  Clock,
-  Layers,
   Building2,
-  CheckCircle2,
 } from "lucide-react";
 import { useAuthStore } from "../store/authStore.js";
 import { useAnalyticsSummary } from "../api/analytics.js";
-import { formatPaise, formatDate, formatRelativeTime } from "../lib/format.js";
+import { formatPaise, formatDate } from "../lib/format.js";
 import { AnimatedNumber } from "../components/motion/AnimatedNumber.js";
 import { SpendChart } from "../components/charts/SpendChart.js";
 import { StatusBadge } from "../components/orders/StatusBadge.js";
@@ -34,24 +30,25 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="space-y-8">
       {/* Header Greeting */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-border pb-6">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono font-semibold text-accent uppercase tracking-wider">
-            <Building2 className="h-3.5 w-3.5" />
-            <span>{business?.name || "Patel Supermarket"}</span>
-            <span className="text-muted">• {business?.city || "Mumbai"}</span>
+          <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-muted">
+            <Building2 className="h-3.5 w-3.5 text-muted" />
+            <span className="text-ink font-semibold">{business?.name || "Patel Supermarket"}</span>
+            <span className="opacity-40">/</span>
+            <span>{business?.city || "Mumbai"}</span>
           </div>
-          <h1 className="mt-1 font-heading text-2xl sm:text-3xl font-extrabold text-ink">
-            Welcome back, {user?.name?.split(" ")[0] || "Owner"}
+          <h1 className="mt-1 text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
+            Command Dashboard
           </h1>
-          <p className="mt-1 text-xs sm:text-sm text-muted">
-            Autonomous purchasing agent is ready. Monitor spending and approve restock orders.
+          <p className="mt-1 text-xs text-muted">
+            Welcome back, {user?.name?.split(" ")[0] || "Owner"}. Autonomous restock pipeline is operational.
           </p>
         </div>
 
         <Link to="/procure" className="w-full sm:w-auto">
-          <Button variant="accent" size="lg" className="w-full sm:w-auto gap-2 font-bold shadow-md shadow-accent/20">
-            <Sparkles className="h-4 w-4" />
+          <Button variant="primary" size="lg" className="w-full sm:w-auto gap-2 font-bold text-xs h-10 px-5 shadow-sm">
+            <Sparkles className="h-3.5 w-3.5" />
             New Purchase Request
           </Button>
         </Link>
@@ -60,65 +57,65 @@ export const Dashboard: React.FC = () => {
       {/* KPI Ticker Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Total Spend */}
-        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <div className="rounded-[10px] border border-border bg-surface p-5 shadow-sm hover:border-border-strong transition-all">
           <div className="flex items-center justify-between text-muted">
-            <span className="text-xs font-semibold uppercase tracking-wider">Total Spend</span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-card-subtle text-ink">
-              <IndianRupee className="h-4 w-4" />
+            <span className="text-[11px] font-mono uppercase tracking-wider">All-Time Spend</span>
+            <div className="flex h-7 w-7 items-center justify-center rounded-[4px] bg-surface-elevated text-ink">
+              <IndianRupee className="h-3.5 w-3.5" />
             </div>
           </div>
-          <div className="mt-4">
-            <div className="font-mono text-2xl font-black text-ink">
+          <div className="mt-3">
+            <div className="font-mono text-2xl font-black text-ink tabular-nums">
               {isLoading ? (
-                <Skeleton className="h-8 w-32" />
+                <Skeleton className="h-7 w-32" />
               ) : (
                 <AnimatedNumber value={spendRupees} prefix="₹" />
               )}
             </div>
-            <p className="mt-1 text-xs text-muted">All-time settled procurement</p>
+            <p className="mt-1 text-[11px] text-muted font-mono">Settled via PayPal Sandbox</p>
           </div>
         </div>
 
         {/* This Month's Spend */}
-        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <div className="rounded-[10px] border border-border bg-surface p-5 shadow-sm hover:border-border-strong transition-all">
           <div className="flex items-center justify-between text-muted">
-            <span className="text-xs font-semibold uppercase tracking-wider">This Month</span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-card-subtle text-accent">
-              <TrendingUp className="h-4 w-4" />
+            <span className="text-[11px] font-mono uppercase tracking-wider">This Month</span>
+            <div className="flex h-7 w-7 items-center justify-center rounded-[4px] bg-surface-elevated text-ink">
+              <TrendingUp className="h-3.5 w-3.5" />
             </div>
           </div>
-          <div className="mt-4">
-            <div className="font-mono text-2xl font-black text-ink">
+          <div className="mt-3">
+            <div className="font-mono text-2xl font-black text-ink tabular-nums">
               {isLoading ? (
-                <Skeleton className="h-8 w-32" />
+                <Skeleton className="h-7 w-32" />
               ) : (
                 <AnimatedNumber value={monthSpendRupees} prefix="₹" />
               )}
             </div>
-            <p className="mt-1 text-xs text-muted">
-              Monthly budget: {business?.monthlyBudgetPaise ? formatPaise(business.monthlyBudgetPaise) : "₹1,00,000"}
+            <p className="mt-1 text-[11px] text-muted font-mono">
+              Cap: {business?.monthlyBudgetPaise ? formatPaise(business.monthlyBudgetPaise) : "₹1,50,000"}
             </p>
           </div>
         </div>
 
         {/* Budget Utilisation */}
-        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <div className="rounded-[10px] border border-border bg-surface p-5 shadow-sm hover:border-border-strong transition-all">
           <div className="flex items-center justify-between text-muted">
-            <span className="text-xs font-semibold uppercase tracking-wider">Budget Utilisation</span>
-            <span className="font-mono text-xs font-bold text-ink">{budgetUtilization}%</span>
+            <span className="text-[11px] font-mono uppercase tracking-wider">Budget Utilisation</span>
+            <span className="font-mono text-xs font-bold text-ink tabular-nums">{budgetUtilization}%</span>
           </div>
-          <div className="mt-4">
-            <div className="font-mono text-2xl font-black text-ink">
+          <div className="mt-3">
+            <div className="font-mono text-2xl font-black text-ink tabular-nums">
               {isLoading ? (
-                <Skeleton className="h-8 w-20" />
+                <Skeleton className="h-7 w-20" />
               ) : (
                 <AnimatedNumber value={budgetUtilization} suffix="%" />
               )}
             </div>
-            <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-card-subtle">
+            <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-white/[0.06]">
               <div
                 className={`h-full transition-all duration-500 ${
-                  budgetUtilization > 90 ? "bg-rose-500" : budgetUtilization > 70 ? "bg-amber-400" : "bg-accent"
+                  budgetUtilization > 90 ? "bg-rose-500" : budgetUtilization > 70 ? "bg-amber-400" : "bg-ink"
                 }`}
                 style={{ width: `${Math.min(budgetUtilization, 100)}%` }}
               />
@@ -127,22 +124,22 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Estimated Savings */}
-        <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <div className="rounded-[10px] border border-border bg-surface p-5 shadow-sm hover:border-border-strong transition-all">
           <div className="flex items-center justify-between text-muted">
-            <span className="text-xs font-semibold uppercase tracking-wider">Estimated Savings</span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-card-subtle text-emerald-500">
-              <TrendingDown className="h-4 w-4" />
+            <span className="text-[11px] font-mono uppercase tracking-wider">Optimized Savings</span>
+            <div className="flex h-7 w-7 items-center justify-center rounded-[4px] bg-surface-elevated text-emerald-600 dark:text-emerald-400">
+              <TrendingDown className="h-3.5 w-3.5" />
             </div>
           </div>
-          <div className="mt-4">
-            <div className="font-mono text-2xl font-black text-emerald-600 dark:text-emerald-400">
+          <div className="mt-3">
+            <div className="font-mono text-2xl font-black text-ink tabular-nums">
               {isLoading ? (
-                <Skeleton className="h-8 w-24" />
+                <Skeleton className="h-7 w-24" />
               ) : (
                 <AnimatedNumber value={savingsRupees} prefix="₹" />
               )}
             </div>
-            <p className="mt-1 text-xs text-muted">Via knapsack tier & shipping consolidation</p>
+            <p className="mt-1 text-[11px] text-muted font-mono">Knapsack tier & freight savings</p>
           </div>
         </div>
       </div>
@@ -150,13 +147,13 @@ export const Dashboard: React.FC = () => {
       {/* Main Grid: Spend Chart & Quick Action */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Monthly Spend Chart */}
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm lg:col-span-2">
-          <div className="flex items-center justify-between border-b border-border/60 pb-4">
+        <div className="rounded-[12px] border border-border bg-surface p-6 shadow-sm lg:col-span-2">
+          <div className="flex items-center justify-between border-b border-border pb-4">
             <div>
-              <h2 className="font-heading text-base font-bold text-ink">Procurement Spend by Month</h2>
+              <h2 className="text-sm font-bold text-ink tracking-tight">Procurement Spend by Month</h2>
               <p className="text-xs text-muted mt-0.5">Authoritative invoice totals in INR</p>
             </div>
-            <Link to="/analytics" className="text-xs font-semibold text-accent hover:underline">
+            <Link to="/analytics" className="text-xs font-mono text-muted hover:text-ink transition-colors">
               Full Analytics →
             </Link>
           </div>
@@ -170,41 +167,40 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Fast CTA Card */}
-        <div className="flex flex-col justify-between rounded-2xl border border-accent/40 bg-card p-6 shadow-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 -mt-6 -mr-6 h-32 w-32 rounded-full bg-accent/10 blur-2xl pointer-events-none" />
+        <div className="flex flex-col justify-between rounded-[12px] border border-border bg-surface p-6 shadow-sm relative overflow-hidden group">
           <div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent text-accent-ink">
-              <Sparkles className="h-5 w-5" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-[6px] bg-ink text-background font-bold">
+              <Sparkles className="h-4 w-4" />
             </div>
-            <h3 className="mt-4 font-heading text-lg font-bold text-ink">
-              Restock Kirana Catalogue
+            <h3 className="mt-4 text-base font-bold text-ink tracking-tight">
+              Autonomous Kirana Restock
             </h3>
-            <p className="mt-2 text-xs text-muted leading-relaxed">
+            <p className="mt-2 text-xs text-muted leading-relaxed font-sans">
               Enter restock requests in natural English or Hinglish. ProcurePilot matches items, compares wholesale tiers, and drafts approved purchase orders.
             </p>
 
-            <div className="mt-4 rounded-xl border border-border bg-card-subtle p-3 font-mono text-[11px] text-muted space-y-1">
-              <div>• "30 packets of rice, 20 units cooking oil"</div>
-              <div>• "Restock snacks under ₹10,000 fastest delivery"</div>
+            <div className="mt-4 rounded-[6px] border border-border bg-surface-elevated p-3 font-mono text-[11px] text-muted space-y-1">
+              <div>· "30 packets of rice, 20 units cooking oil"</div>
+              <div>· "Restock snacks under ₹10,000 fastest"</div>
             </div>
           </div>
 
           <Link to="/procure" className="mt-6">
-            <Button variant="accent" size="md" className="w-full gap-2 font-bold">
-              Launch Agent <ArrowRight className="h-4 w-4" />
+            <Button variant="primary" size="md" className="w-full gap-2 font-bold text-xs h-10">
+              Launch Agent <ArrowRight className="h-3.5 w-3.5" />
             </Button>
           </Link>
         </div>
       </div>
 
       {/* Recent Orders Section */}
-      <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-        <div className="flex items-center justify-between border-b border-border/60 pb-4">
+      <div className="rounded-[12px] border border-border bg-surface p-6 shadow-sm">
+        <div className="flex items-center justify-between border-b border-border pb-4">
           <div>
-            <h2 className="font-heading text-base font-bold text-ink">Recent Purchase Orders</h2>
+            <h2 className="text-sm font-bold text-ink tracking-tight">Recent Purchase Orders</h2>
             <p className="text-xs text-muted mt-0.5">Live status from draft to PayPal capture</p>
           </div>
-          <Link to="/orders" className="text-xs font-semibold text-accent hover:underline">
+          <Link to="/orders" className="text-xs font-mono text-muted hover:text-ink transition-colors">
             View All Orders →
           </Link>
         </div>
@@ -217,44 +213,44 @@ export const Dashboard: React.FC = () => {
               <Skeleton className="h-10 w-full" />
             </div>
           ) : !analytics?.recentOrders || analytics.recentOrders.length === 0 ? (
-            <div className="py-12 text-center text-xs text-muted">
-              <ShoppingBag className="mx-auto h-8 w-8 text-muted/60 mb-2" />
+            <div className="py-12 text-center text-xs text-muted font-mono">
+              <ShoppingBag className="mx-auto h-8 w-8 text-muted mb-2" />
               No purchase orders created yet.
               <div className="mt-3">
                 <Link to="/procure">
-                  <Button variant="outline" size="sm">Create first request</Button>
+                  <Button variant="outline" size="sm">Create First Request</Button>
                 </Link>
               </div>
             </div>
           ) : (
             <table className="w-full text-left text-xs">
-              <thead className="border-b border-border text-muted uppercase tracking-wider font-semibold">
+              <thead className="border-b border-border text-muted uppercase tracking-wider font-mono text-[10px]">
                 <tr>
                   <th className="py-3 px-4">Order ID</th>
                   <th className="py-3 px-4">Date</th>
                   <th className="py-3 px-4">Items</th>
                   <th className="py-3 px-4">Suppliers</th>
-                  <th className="py-3 px-4">Authoritative Total</th>
+                  <th className="py-3 px-4">Total (INR)</th>
                   <th className="py-3 px-4">Status</th>
                   <th className="py-3 px-4 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border/60">
+              <tbody className="divide-y divide-border">
                 {analytics.recentOrders.map((order) => (
-                  <tr key={order.id} className="hover:bg-card-subtle/50 transition-colors">
+                  <tr key={order.id} className="hover:bg-surface-elevated transition-colors">
                     <td className="py-3.5 px-4 font-mono font-bold text-ink">
                       {order.orderNumber}
                     </td>
-                    <td className="py-3.5 px-4 text-muted">
+                    <td className="py-3.5 px-4 text-muted font-mono">
                       {formatDate(order.createdAt)}
                     </td>
                     <td className="py-3.5 px-4 text-ink">
                       {order.lines.length} {order.lines.length === 1 ? "line" : "lines"}
                     </td>
-                    <td className="py-3.5 px-4 text-muted">
+                    <td className="py-3.5 px-4 text-muted truncate max-w-[180px]">
                       {order.supplierGroups.map((s) => s.supplierName).join(", ")}
                     </td>
-                    <td className="py-3.5 px-4 font-mono font-bold text-ink">
+                    <td className="py-3.5 px-4 font-mono font-bold text-ink tabular-nums">
                       {formatPaise(order.totalPaise)}
                     </td>
                     <td className="py-3.5 px-4">
@@ -262,7 +258,7 @@ export const Dashboard: React.FC = () => {
                     </td>
                     <td className="py-3.5 px-4 text-right">
                       <Link to={`/orders/${order.id}`}>
-                        <Button variant="ghost" size="sm" className="font-semibold text-accent">
+                        <Button variant="ghost" size="sm" className="font-mono text-xs text-muted hover:text-ink h-7 px-2.5">
                           View →
                         </Button>
                       </Link>

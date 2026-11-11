@@ -1,6 +1,7 @@
 import { IPurchaseOrder } from "../../models/PurchaseOrder.js";
 import { IPayment } from "../../models/Payment.js";
 import { PayPalClient } from "./paypal.client.js";
+import { env } from "../../config/env.js";
 
 export interface PayPalCreateOrderResponse {
   id: string;
@@ -34,10 +35,11 @@ export interface PayPalCaptureResponse {
 
 export class PayPalOrdersService {
   /**
-   * Creates a PayPal order using Orders API v2.
-   * Converted line items represent supplier fulfillment groups.
-   * The total USD amount is calculated as the sum of line items to avoid breakdown mismatches.
-   */
+ * Creates a PayPal order using Orders API v2.
+ * Converted line items represent supplier fulfilment groups.
+ * The authoritative payment total is allocated across supplier groups
+ * to ensure the item breakdown matches the payment amount.
+ */
   static async createOrder(
     order: IPurchaseOrder,
     payment: IPayment,
@@ -125,6 +127,8 @@ export class PayPalOrdersService {
         brand_name: "ProcurePilot AI",
         user_action: "PAY_NOW",
         shipping_preference: "NO_SHIPPING",
+        return_url: `${(env.CORS_ORIGINS.split(",")[0] || "http://localhost:5173").trim()}/orders/${order.id}/payment-result`,
+        cancel_url: `${(env.CORS_ORIGINS.split(",")[0] || "http://localhost:5173").trim()}/orders/${order.id}/checkout`,
       },
     };
 

@@ -5,7 +5,7 @@ dotenv.config();
 
 const envSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
-  PORT: z.coerce.number().default(5000),
+  PORT: z.coerce.number().default(5001),
   LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
   CORS_ORIGINS: z.string().default("http://localhost:5173,http://localhost:3000"),
   MONGODB_URI: z.string().optional().default(""),
