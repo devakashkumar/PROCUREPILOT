@@ -162,4 +162,95 @@ export class AuthService {
     }
     return { user, business };
   }
+
+  static async updateProfile(
+    userId: string,
+    businessId: string,
+    data: {
+      name?: string;
+      email?: string;
+      currentPassword?: string;
+      newPassword?: string;
+      businessName?: string;
+      businessType?: string;
+      city?: string;
+      gstin?: string;
+      monthlyBudgetPaise?: number;
+      preferences?: {
+        priority?: "cheapest" | "reliable" | "balanced" | "fastest";
+        minReliability?: number;
+      };
+    }
+  ): Promise<{ user: IUser; business: IBusiness }> {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new ApiError(404, ERROR_CODES.NOT_FOUND, "User account not found");
+    }
+
+    const business = await Business.findById(businessId);
+    if (!business) {
+      throw new ApiError(404, ERROR_CODES.NOT_FOUND, "Business profile not found");
+    }
+
+    const isDemo = user.email === "demo@procurepilot.ai";
+
+    if (data.name) {
+      user.name = data.name.trim();
+    }
+
+    if (data.email && data.email !== user.email) {
+      if (isDemo) {
+        throw new ApiError(403, ERROR_CODES.FORBIDDEN, "Demo account email address cannot be changed. Register a real account to test email updates.");
+      }
+      const existing = await User.findOne({ email: data.email, _id: { $ne: user._id } });
+      if (existing) {
+        throw new ApiError(409, ERROR_CODES.CONFLICT, "An account with this email address already exists");
+      }
+      user.email = data.email;
+    }
+
+    if (data.newPassword) {
+      if (isDemo) {
+        throw new ApiError(403, ERROR_CODES.FORBIDDEN, "Demo account password cannot be modified. Register a real account to test password updates.");
+      }
+      if (!data.currentPassword) {
+        throw new ApiError(400, ERROR_CODES.VALIDATION_ERROR, "Current password is required to set a new password");
+      }
+      const isMatch = await bcrypt.compare(data.currentPassword, user.passwordHash);
+      if (!isMatch) {
+        throw new ApiError(400, ERROR_CODES.UNAUTHORIZED, "Current password is incorrect");
+      }
+      user.passwordHash = await bcrypt.hash(data.newPassword, BCRYPT_SALT_ROUNDS);
+    }
+
+    await user.save();
+
+    if (data.businessName) {
+      business.name = data.businessName.trim();
+    }
+    if (data.businessType) {
+      business.type = data.businessType.trim();
+    }
+    if (data.city) {
+      business.city = data.city.trim();
+    }
+    if (data.gstin !== undefined) {
+      business.gstin = data.gstin.trim() || undefined;
+    }
+    if (data.monthlyBudgetPaise !== undefined) {
+      business.monthlyBudgetPaise = data.monthlyBudgetPaise;
+    }
+    if (data.preferences) {
+      if (data.preferences.priority) {
+        business.preferences.priority = data.preferences.priority;
+      }
+      if (data.preferences.minReliability !== undefined) {
+        business.preferences.minReliability = data.preferences.minReliability;
+      }
+    }
+
+    await business.save();
+
+    return { user, business };
+  }
 }

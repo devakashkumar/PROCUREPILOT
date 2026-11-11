@@ -3,22 +3,22 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../../lib/cn.js";
 
 export const badgeVariants = cva(
-  "inline-flex items-center gap-1.5 rounded-full font-bold uppercase tracking-wider select-none",
+  "inline-flex items-center gap-1.5 font-mono text-[11px] tracking-wider uppercase select-none rounded-[4px] px-2 py-0.5 border whitespace-nowrap",
   {
     variants: {
       variant: {
-        default: "bg-subtle text-ink border border-border",
-        accent: "bg-accent text-accent-ink font-extrabold",
-        success: "bg-success/10 text-success border border-success/30",
-        warning: "bg-warning/10 text-warning border border-warning/30",
-        danger: "bg-danger/10 text-danger border border-danger/30",
-        info: "bg-info/10 text-info border border-info/30",
-        outline: "border border-border text-ink bg-transparent",
+        default: "bg-white/[0.03] text-muted border-border",
+        accent: "bg-ink text-background font-bold border-white",
+        success: "bg-emerald-950/30 text-emerald-300 border-emerald-500/30",
+        warning: "bg-amber-950/30 text-amber-300 border-amber-500/30",
+        danger: "bg-rose-950/30 text-rose-300 border-rose-500/30",
+        info: "bg-sky-950/30 text-sky-300 border-sky-500/30",
+        outline: "border-border-strong text-muted bg-transparent",
       },
       size: {
-        sm: "px-2.5 py-0.5 text-[10px]",
-        default: "px-3 py-1 text-xs",
-        lg: "px-3.5 py-1.5 text-xs font-mono",
+        sm: "px-1.5 py-0.2 text-[10px]",
+        default: "px-2 py-0.5 text-[11px]",
+        lg: "px-2.5 py-1 text-xs",
       },
     },
     defaultVariants: {
@@ -40,13 +40,13 @@ export function Badge({ className, variant, size, dot, children, ...props }: Bad
       {dot && (
         <span
           className={cn(
-            "h-1.5 w-1.5 rounded-full",
-            variant === "success" && "bg-success",
-            variant === "warning" && "bg-warning",
-            variant === "danger" && "bg-danger",
-            variant === "info" && "bg-info",
-            (!variant || variant === "default") && "bg-ink",
-            variant === "accent" && "bg-accent-ink"
+            "h-1.5 w-1.5 rounded-full shrink-0",
+            variant === "success" && "bg-emerald-400",
+            variant === "warning" && "bg-amber-400",
+            variant === "danger" && "bg-rose-400",
+            variant === "info" && "bg-sky-400",
+            (!variant || variant === "default") && "bg-white/60",
+            variant === "accent" && "bg-black"
           )}
         />
       )}

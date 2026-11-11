@@ -2,53 +2,102 @@
 @import "@fontsource-variable/jetbrains-mono";
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-background: var(--background);
+  --color-obsidian: var(--background-obsidian);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-subtle-meta: var(--subtle-meta);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-subtle: var(--subtle);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+}
+
 @layer base {
   :root {
     --font-sans: "Plus Jakarta Sans Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --font-mono: "JetBrains Mono Variable", monospace;
 
-    /* Light Theme (Section 5.2) */
-    --background: #FAFAF7;
+    /* Light Mode Clean Editorial Monochrome (Paper & Titanium) */
+    --background: #FAFAF9;
+    --background-obsidian: #F4F4F5;
     --surface: #FFFFFF;
-    --ink: #0A0A0A;
-    --muted: #6B6B66;
-    --border: #E8E8E2;
-    --subtle: #F2F2EC;
+    --surface-elevated: #F4F4F5;
+    --surface-glass: rgba(0, 0, 0, 0.02);
+    
+    --ink: #09090B;
+    --muted: #52525B;
+    --subtle-meta: #71717A;
+    --border: rgba(0, 0, 0, 0.08);
+    --border-strong: rgba(0, 0, 0, 0.16);
+    --subtle: #F4F4F5;
 
-    /* Accent & Semantics */
-    --accent: #C8FF2E;
-    --accent-ink: #0A0A0A;
-    --success: #16A34A;
-    --warning: #F59E0B;
-    --danger: #E5484D;
-    --info: #2F5BFF;
+    --accent: #09090B;
+    --accent-ink: #FFFFFF;
+    --accent-cyan: #0284C7;
+    --accent-emerald: #059669;
+    --accent-violet: #7C3AED;
 
-    /* Radii */
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 20px;
-    --radius-xl: 28px;
+    --success: #059669;
+    --warning: #D97706;
+    --danger: #DC2626;
+    --info: #0284C7;
+
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
   }
 
   .dark {
-    /* Dark Theme (Section 5.2) */
-    --background: #0A0A0A;
-    --surface: #111111;
-    --ink: #FAFAF7;
-    --muted: #8A8A84;
-    --border: #232323;
-    --subtle: #161616;
+    /* Dark Mode High-End Monochrome Obsidian Core */
+    --background: #000000;
+    --background-obsidian: #08080A;
+    --surface: #0D0E12;
+    --surface-elevated: #13141B;
+    --surface-glass: rgba(255, 255, 255, 0.02);
+    
+    --ink: #FFFFFF;
+    --muted: #A1A1AA;
+    --subtle-meta: #52525B;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --subtle: #121318;
 
-    --accent: #C8FF2E;
-    --accent-ink: #0A0A0A;
-    --success: #16A34A;
+    --accent: #FFFFFF;
+    --accent-ink: #000000;
+    --accent-cyan: #00F0FF;
+    --accent-emerald: #10B981;
+    --accent-violet: #8B5CF6;
+
+    --success: #10B981;
     --warning: #F59E0B;
-    --danger: #E5484D;
-    --info: #2F5BFF;
+    --danger: #EF4444;
+    --info: #38BDF8;
   }
 
   * {
     border-color: var(--border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--background);
+    color: var(--ink);
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  html:not(.dark) {
+    color-scheme: light;
   }
 
   body {
@@ -57,9 +106,10 @@
     font-family: var(--font-sans);
     letter-spacing: -0.015em;
     overflow-x: hidden;
+    min-height: 100vh;
   }
 
-  /* Mono font strictly for numbers, IDs, and order numbers */
+  /* Monospace tabular figures for metrics, IDs, timestamps and currencies */
   .font-mono,
   .tabular-nums {
     font-family: var(--font-mono);
@@ -67,93 +117,106 @@
   }
 }
 
-/* Typography Scale (Section 5.2) */
+/* Monumental Kinetic Typography */
 .font-display {
   font-family: var(--font-sans);
-  font-size: clamp(2.75rem, 6vw, 5.5rem);
-  line-height: 1.05;
+  font-size: clamp(3rem, 7vw, 6.5rem);
+  line-height: 0.98;
   font-weight: 800;
   letter-spacing: -0.045em;
+  text-wrap: balance;
 }
 
 .font-h1 {
   font-family: var(--font-sans);
-  font-size: clamp(2rem, 4vw, 3.5rem);
-  line-height: 1.08;
+  font-size: clamp(2rem, 4.5vw, 3.75rem);
+  line-height: 1.05;
   font-weight: 800;
   letter-spacing: -0.04em;
+  text-wrap: balance;
 }
 
 .font-h2 {
   font-family: var(--font-sans);
   font-size: clamp(1.5rem, 3vw, 2.25rem);
-  line-height: 1.12;
-  font-weight: 800;
+  line-height: 1.15;
+  font-weight: 700;
   letter-spacing: -0.03em;
+  text-wrap: balance;
 }
 
 .font-h3 {
   font-family: var(--font-sans);
   font-size: clamp(1.15rem, 2vw, 1.5rem);
   line-height: 1.25;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
 
-.font-body {
-  font-size: 1rem;
-  line-height: 1.625;
-  font-weight: 500;
+/* Architectural Hairline Surfaces & Cards */
+.card-obsidian {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.font-small {
-  font-size: 0.875rem;
-  line-height: 1.375;
-  font-weight: 600;
+.card-obsidian:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
 }
 
-.font-micro {
-  font-size: 0.75rem;
-  line-height: 1rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+.dark .card-obsidian:hover {
+  box-shadow: 0 0 30px -5px rgba(255, 255, 255, 0.08);
 }
 
-/* Custom razor-sharp card styles (Section 5.2) */
 .card-sharp {
   background-color: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s ease;
+  transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card-sharp:hover {
-  border-color: var(--ink);
-  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
 }
 
-/* Focus outline */
+.dark .card-sharp:hover {
+  box-shadow: 0 0 30px -5px rgba(255, 255, 255, 0.08);
+}
+
+/* Ambient Radial Glow Gradients */
+.glow-radial-top {
+  background-image: radial-gradient(ellipse 60% 40% at 50% -10%, rgba(0, 0, 0, 0.06), transparent);
+}
+.dark .glow-radial-top {
+  background-image: radial-gradient(ellipse 60% 40% at 50% -10%, rgba(255, 255, 255, 0.12), transparent);
+}
+
+.glow-radial-subtle {
+  background-image: radial-gradient(ellipse 50% 30% at 50% 0%, rgba(0, 0, 0, 0.04), transparent);
+}
+.dark .glow-radial-subtle {
+  background-image: radial-gradient(ellipse 50% 30% at 50% 0%, rgba(255, 255, 255, 0.06), transparent);
+}
+
+/* Focus Halo Rings */
 :focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 3px var(--ink);
 }
 
-.dark :focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-/* Scrollbar */
+/* Minimalist Hairline Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: var(--background);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
+  background: var(--border-strong);
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {

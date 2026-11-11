@@ -37,6 +37,16 @@ export class AuthController {
     sendSuccess(res, result);
   }
 
+  static async updateProfile(req: Request, res: Response): Promise<void> {
+    const userId = req.user?.id;
+    const businessId = req.businessId;
+    if (!userId || !businessId) {
+      throw new ApiError(401, ERROR_CODES.UNAUTHORIZED, "Authentication required");
+    }
+    const result = await AuthService.updateProfile(userId, businessId, req.body);
+    sendSuccess(res, result);
+  }
+
   static async refresh(req: Request, res: Response): Promise<void> {
     const tokens = await AuthService.refresh(req.body.refreshToken);
     sendSuccess(res, tokens);

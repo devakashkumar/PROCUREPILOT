@@ -9,6 +9,7 @@ export interface CreatePaymentResponse {
   amountInr: number;
   fxRate: number;
   fxNote: string;
+  approveUrl?: string | null;
 }
 
 export interface CapturePaymentResponse {
@@ -24,8 +25,8 @@ export const paymentsApi = {
   create: (orderId: string) =>
     apiClient.post<unknown, CreatePaymentResponse>("/payments/create", { orderId }),
 
-  capture: (paypalOrderId: string) =>
-    apiClient.post<unknown, CapturePaymentResponse>("/payments/capture", { paypalOrderId }),
+  capture: (paypalOrderId: string, sandboxSimulated?: boolean) =>
+    apiClient.post<unknown, CapturePaymentResponse>("/payments/capture", { paypalOrderId, sandboxSimulated }),
 
   cancel: (paypalOrderId: string) =>
     apiClient.post<unknown, { payment: Payment }>("/payments/cancel", { paypalOrderId }),

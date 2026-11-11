@@ -9,6 +9,8 @@ import {
   TooltipProps,
 } from "recharts";
 import { formatPaise } from "../../lib/format.js";
+import { useUiStore } from "../../store/uiStore.js";
+import { ANALYTICS_PALETTE } from "./chartTheme.js";
 
 interface SupplierShareItem {
   supplierName: string;
@@ -21,26 +23,16 @@ interface SupplierShareChartProps {
   height?: number;
 }
 
-const PALETTE = [
-  "#C8FF2E", // ProcurePilot Volt
-  "#38BDF8", // Sky blue
-  "#A78BFA", // Violet
-  "#F472B6", // Pink
-  "#FBBF24", // Amber
-  "#34D399", // Emerald
-  "#94A3B8", // Slate
-];
-
 const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload as SupplierShareItem & { spendInr: number };
     return (
-      <div className="rounded-xl border border-border bg-card p-3 shadow-lg">
-        <p className="font-semibold text-xs text-ink">{data.supplierName}</p>
-        <p className="font-mono text-sm font-bold text-accent">
+      <div className="rounded-[8px] border border-border bg-surface p-3 shadow-xl">
+        <p className="text-xs font-bold text-ink mb-1">{data.supplierName}</p>
+        <p className="font-mono text-sm font-bold text-ink tabular-nums">
           {formatPaise(data.totalSpendPaise)}
         </p>
-        <p className="text-xs text-muted mt-1">
+        <p className="text-[11px] text-muted mt-1 font-mono">
           {data.orderCount} {data.orderCount === 1 ? "order fulfilled" : "orders fulfilled"}
         </p>
       </div>
@@ -53,6 +45,9 @@ export const SupplierShareChart: React.FC<SupplierShareChartProps> = ({
   data,
   height = 280,
 }) => {
+  const { theme } = useUiStore();
+  const isDark = theme === "dark";
+
   const chartData = data.map((item) => ({
     ...item,
     spendInr: item.totalSpendPaise / 100,
@@ -62,12 +57,14 @@ export const SupplierShareChart: React.FC<SupplierShareChartProps> = ({
     return (
       <div
         style={{ height }}
-        className="flex items-center justify-center rounded-2xl border border-dashed border-border bg-card-subtle text-xs text-muted"
+        className="flex items-center justify-center rounded-[8px] border border-dashed border-border bg-subtle/50 text-xs font-mono text-muted"
       >
         No supplier distribution data available yet.
       </div>
     );
   }
+
+  const sliceBorderColor = isDark ? "#0D0E12" : "#FFFFFF";
 
   return (
     <div style={{ width: "100%", height }}>
@@ -82,12 +79,13 @@ export const SupplierShareChart: React.FC<SupplierShareChartProps> = ({
             innerRadius={60}
             outerRadius={95}
             paddingAngle={3}
+            stroke={sliceBorderColor}
+            strokeWidth={2}
           >
             {chartData.map((_, index) => (
               <Cell
-                key={`cell-${index}`}
-                fill={PALETTE[index % PALETTE.length]}
-                stroke="transparent"
+                key={`pie-cell-${index}`}
+                fill={ANALYTICS_PALETTE[index % ANALYTICS_PALETTE.length]}
               />
             ))}
           </Pie>
@@ -96,7 +94,7 @@ export const SupplierShareChart: React.FC<SupplierShareChartProps> = ({
             verticalAlign="bottom"
             height={36}
             formatter={(value: string) => (
-              <span className="text-xs font-medium text-ink">{value}</span>
+              <span className="text-xs font-medium text-ink/80">{value}</span>
             )}
           />
         </PieChart>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Sparkles, ArrowRight, Lock, Mail, ShieldAlert, Zap, Loader2 } from "lucide-react";
+import { Zap, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 import { useAuthStore } from "../store/authStore.js";
 import { Button } from "../components/ui/Button.js";
@@ -22,7 +22,7 @@ export const Login: React.FC = () => {
     clearError();
     try {
       await login(email, password);
-      toast.success("Welcome back to ProcurePilot!");
+      toast.success("Authenticated with ProcurePilot");
       navigate(from, { replace: true });
     } catch {
       // Error managed in store
@@ -35,7 +35,7 @@ export const Login: React.FC = () => {
     clearError();
     try {
       await login("demo@procurepilot.ai", "Demo@12345");
-      toast.success("Signed in with demo Kirana business!");
+      toast.success("Signed in with demo Kirana business");
       navigate(from, { replace: true });
     } catch {
       // Error in store
@@ -43,130 +43,114 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
-      {/* Left Column: Form */}
-      <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
-        <div className="mx-auto w-full max-w-sm lg:w-96">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent text-accent-ink">
-                <Sparkles className="h-4 w-4" />
-              </div>
-              <span className="font-heading font-extrabold text-base text-ink">
-                ProcurePilot<span className="text-accent">.ai</span>
+    <div className="flex min-h-screen bg-background text-ink relative overflow-hidden transition-colors duration-300">
+      {/* Ambient Lighting Gradient */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[450px] pointer-events-none glow-radial-top z-0" />
+
+      {/* Main Container */}
+      <div className="relative z-10 flex w-full flex-col items-center justify-center px-4 py-16 sm:px-8 sm:py-24">
+        <div className="w-full max-w-lg">
+          {/* Header */}
+          <div className="flex items-center justify-between pb-6 border-b border-border mb-8">
+            <Link to="/" className="flex items-center gap-2 group">
+              <img src="/logo.png" alt="ProcurePilot" className="h-8 w-8 object-contain" />
+              <span className="font-bold text-base tracking-tight text-ink">
+                ProcurePilot
               </span>
             </Link>
             <ThemeToggle />
           </div>
 
           <div className="mt-8">
-            <h2 className="font-heading text-2xl font-bold tracking-tight text-ink">
-              Sign in to your business
+            <span className="font-mono text-[10px] uppercase tracking-widest text-muted">Authentication</span>
+            <h2 className="mt-2 text-3xl sm:text-4xl font-extrabold tracking-tight text-ink">
+              Sign In to Your Business
             </h2>
-            <p className="mt-2 text-xs text-muted">
+            <p className="mt-1 text-xs text-muted">
               Or{" "}
-              <Link to="/register" className="font-medium text-accent underline underline-offset-4">
-                register a new retail store
+              <Link to="/register" className="text-ink underline underline-offset-4 hover:opacity-80 font-medium">
+                register a new retail store profile
               </Link>
             </p>
           </div>
 
-          {/* Quick Demo Button */}
-          <div className="mt-6 rounded-2xl border border-accent/40 bg-accent/5 p-4">
-            <div className="flex items-center gap-2 text-xs font-semibold text-ink dark:text-accent">
-              <Zap className="h-4 w-4 fill-current text-accent" />
-              <span>Instant Hackathon Evaluation</span>
+          {/* Instant 1-Click Demo Account Card */}
+          <div className="mt-6 rounded-[12px] border border-border bg-surface p-5 sm:p-6 text-left shadow-lg">
+            <div className="flex items-center justify-between text-xs font-mono text-ink">
+              <div className="flex items-center gap-2">
+                <Zap className="h-3.5 w-3.5 text-ink" />
+                <span className="font-bold">Instant Evaluation Account</span>
+              </div>
+              <span className="text-[10px] text-muted">1-CLICK</span>
             </div>
-            <p className="mt-1 text-[11px] text-muted">
-              Pre-seeded with Patel Supermarket, 38 catalogue items and 7 verified Indian suppliers.
+            <p className="mt-1 text-xs text-muted leading-relaxed font-sans">
+              Pre-seeded with Patel Supermarket (Mumbai), 38 FMCG products, and 210 verified distributor offers.
             </p>
             <Button
               type="button"
-              variant="accent"
+              variant="primary"
               size="sm"
               onClick={handleUseDemo}
               disabled={isLoading}
-              className="mt-3 w-full gap-2 font-bold"
+              className="mt-3.5 w-full gap-2 font-bold text-xs h-9"
             >
               <Zap className="h-3.5 w-3.5 fill-current" />
               Use 1-Click Demo Account
             </Button>
           </div>
 
+          {/* Divider */}
+          <div className="relative my-6 flex items-center justify-center">
+            <div className="w-full border-t border-border" />
+            <span className="absolute bg-background px-3 font-mono text-[10px] uppercase tracking-widest text-muted">
+              OR EMAIL CREDENTIALS
+            </span>
+          </div>
+
           {/* Error Banner */}
           {error && (
-            <div className="mt-4 flex items-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-600 dark:text-rose-400">
+            <div className="mb-4 flex items-center gap-2 rounded-[6px] border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-600 dark:text-rose-300">
               <ShieldAlert className="h-4 w-4 shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <Input
               label="Email Address"
               type="email"
-              autoComplete="email"
               required
-              placeholder="owner@store.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              startIcon={<Mail className="h-4 w-4" />}
+              placeholder="owner@kirana.store"
+              autoComplete="email"
             />
 
             <Input
               label="Password"
               type="password"
-              autoComplete="current-password"
               required
-              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              startIcon={<Lock className="h-4 w-4" />}
+              placeholder="••••••••"
+              autoComplete="current-password"
             />
 
             <Button
               type="submit"
-              variant="primary"
-              size="lg"
-              className="w-full gap-2 font-bold"
-              disabled={isLoading}
+              variant="secondary"
+              size="default"
+              isLoading={isLoading}
+              className="w-full font-bold text-xs h-10 mt-2"
             >
-              {isLoading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" /> Authenticating...
-                </>
-              ) : (
-                <>
-                  Sign in <ArrowRight className="h-4 w-4" />
-                </>
-              )}
+              Sign In to Dashboard
             </Button>
           </form>
-        </div>
-      </div>
 
-      {/* Right Column: Visual Showcase */}
-      <div className="relative hidden w-0 flex-1 lg:block">
-        <div className="absolute inset-0 bg-card-subtle flex flex-col justify-between p-12 border-l border-border">
-          <div className="max-w-md">
-            <span className="text-xs font-mono font-bold tracking-wider text-accent uppercase">
-              Financial Safety & Control
-            </span>
-            <h3 className="mt-3 font-heading text-3xl font-bold text-ink">
-              "Never trust AI with authoritative money math."
-            </h3>
-            <p className="mt-3 text-sm text-muted leading-relaxed">
-              ProcurePilot isolates AI to prompt understanding and natural explanation. Every rupee,
-              minimum order quantity, and PayPal capture is calculated and verified deterministically.
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-border bg-card p-6 shadow-md font-mono text-xs space-y-2">
-            <div className="text-accent font-bold">✓ Multi-tenant isolated workspace</div>
-            <div className="text-muted">✓ Integer paise precision (INR)</div>
-            <div className="text-muted">✓ PayPal Orders v2 Sandbox integration</div>
-            <div className="text-muted">✓ Mandatory owner sign-off state machine</div>
+          {/* Footer note */}
+          <div className="mt-8 pt-4 border-t border-border text-center text-[11px] font-mono text-muted">
+            Encrypted Session · Token-Based Rotation
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { IPurchaseOrder } from "../../models/PurchaseOrder.js";
 import { IPayment } from "../../models/Payment.js";
 import { PayPalClient } from "./paypal.client.js";
 import { paiseToUsdCents } from "../../utils/money.js";
+import { env } from "../../config/env.js";
 
 export interface PayPalCreateOrderResponse {
   id: string;
@@ -101,6 +102,8 @@ export class PayPalOrdersService {
         brand_name: "ProcurePilot AI",
         user_action: "PAY_NOW",
         shipping_preference: "NO_SHIPPING",
+        return_url: `${(env.CORS_ORIGINS.split(",")[0] || "http://localhost:5173").trim()}/orders/${order.id}/payment-result`,
+        cancel_url: `${(env.CORS_ORIGINS.split(",")[0] || "http://localhost:5173").trim()}/orders/${order.id}/checkout`,
       },
     };
 
