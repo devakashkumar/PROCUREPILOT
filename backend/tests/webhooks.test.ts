@@ -1,3 +1,4 @@
+import { WebhookEvent } from "../src/models/WebhookEvent.js";
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import request from "supertest";
 import { createApp } from "../src/app.js";
@@ -108,7 +109,82 @@ describe("Webhooks Module (POST /api/payments/webhook)", () => {
     expect(res.status).toBe(200);
     expect(res.body.status).toBe("IGNORED_DUPLICATE");
   });
+  it("does not complete payment when webhook amount does not match", async () => {
+  const { PayPalWebhookService } = await import(
+    "../src/services/paypal/paypal.webhooks.js"
+  );
 
+  const originalVerify = PayPalWebhookService.verifySignature;
+  PayPalWebhookService.verifySignature = async () => true;
+
+  const eventId = `WH-EVT-WRONG-AMOUNT-${Date.now()}`;
+
+  try {
+    const res = await request(app)
+      .post("/api/payments/webhook")
+      .set("Content-Type", "application/json")
+      .send(JSON.stringify({
+        id: eventId,
+        event_type: "PAYMENT.CAPTURE.COMPLETED",
+        resource: {
+          id: `CAP-WRONG-${Date.now()}`,
+          custom_id: orderId,
+          status: "COMPLETED",
+          amount: { currency_code: "USD", value: "10.00" },
+        },
+      }));
+
+    expect(res.status).toBe(200);
+    expect(res.body.status).toBe("SUCCESS");
+
+    const payment = await Payment.findOne({ orderId });
+    const order = await PurchaseOrder.findById(orderId);
+    const webhook = await WebhookEvent.findOne({ providerEventId: eventId });
+
+    expect(payment?.status).toBe(PAYMENT_STATUS.PENDING);
+    expect(order?.status).toBe(ORDER_STATUS.PAYMENT_PENDING);
+    expect(webhook?.outcome).toBe("FAILED");
+  } finally {
+    PayPalWebhookService.verifySignature = originalVerify;
+  }
+});
+
+it("does not complete payment when webhook currency is incorrect", async () => {
+  const { PayPalWebhookService } = await import(
+    "../src/services/paypal/paypal.webhooks.js"
+  );
+
+  const originalVerify = PayPalWebhookService.verifySignature;
+  PayPalWebhookService.verifySignature = async () => true;
+
+  const eventId = `WH-EVT-WRONG-CURRENCY-${Date.now()}`;
+
+  try {
+    await request(app)
+      .post("/api/payments/webhook")
+      .set("Content-Type", "application/json")
+      .send(JSON.stringify({
+        id: eventId,
+        event_type: "PAYMENT.CAPTURE.COMPLETED",
+        resource: {
+          id: `CAP-CURRENCY-${Date.now()}`,
+          custom_id: orderId,
+          status: "COMPLETED",
+          amount: { currency_code: "INR", value: "5000.00" },
+        },
+      }));
+
+    const payment = await Payment.findOne({ orderId });
+    const order = await PurchaseOrder.findById(orderId);
+    const webhook = await WebhookEvent.findOne({ providerEventId: eventId });
+
+    expect(payment?.status).toBe(PAYMENT_STATUS.PENDING);
+    expect(order?.status).toBe(ORDER_STATUS.PAYMENT_PENDING);
+    expect(webhook?.outcome).toBe("FAILED");
+  } finally {
+    PayPalWebhookService.verifySignature = originalVerify;
+  }
+});
   it("updates payment to COMPLETED and order to PAID upon receiving verified PAYMENT.CAPTURE.COMPLETED", async () => {
     // Mock verifySignature temporarily for this test
     const { PayPalWebhookService } = await import("../src/services/paypal/paypal.webhooks.js");

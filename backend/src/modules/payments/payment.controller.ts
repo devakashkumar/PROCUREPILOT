@@ -491,34 +491,73 @@ if (
       logger.info({ resourceId: resource.id, eventType }, "No matching payment record found for webhook");
       return;
     }
+     if (eventType === "PAYMENT.CAPTURE.COMPLETED") {
+  const amount = resource.amount as
+    | { currency_code?: string; value?: string }
+    | undefined;
 
-    if (eventType === "PAYMENT.CAPTURE.COMPLETED") {
-      payment.verifiedByWebhookAt = new Date();
-      payment.status = PAYMENT_STATUS.COMPLETED;
-      if (resource.id) {
-        payment.paypalCaptureId = resource.id as string;
-      }
-      payment.history.push({
-        status: PAYMENT_STATUS.COMPLETED,
-        at: new Date(),
-        source: "webhook",
-        note: `Confirmed via webhook PAYMENT.CAPTURE.COMPLETED (${resource.id})`,
-      });
-      await payment.save();
+  const capturedAmountUsd = Number(amount?.value);
+  const expectedAmountUsdCents = payment.amountUsdCents;
 
-      // Ensure order is marked PAID
-      const order = await PurchaseOrder.findById(payment.orderId);
-      if (order && order.status !== ORDER_STATUS.PAID) {
-        order.status = ORDER_STATUS.PAID;
-        order.statusHistory.push({
-          from: order.status,
-          to: ORDER_STATUS.PAID,
-          at: new Date(),
-          note: "Marked paid via verified PayPal webhook",
-        });
-        await order.save();
-      }
-    } else if (eventType === "PAYMENT.CAPTURE.DENIED") {
+  const isValidCapture =
+    typeof resource.id === "string" &&
+    resource.id.length > 0 &&
+    payment.currency === "USD" &&
+    amount?.currency_code === "USD" &&
+    Number.isFinite(capturedAmountUsd) &&
+    capturedAmountUsd > 0 &&
+    expectedAmountUsdCents > 0 &&
+    Math.round(capturedAmountUsd * 100) === expectedAmountUsdCents;
+
+  if (!isValidCapture) {
+    logger.error(
+      {
+        resourceId: resource.id,
+        receivedCurrency: amount?.currency_code,
+        receivedAmount: amount?.value,
+        expectedCurrency: payment.currency,
+        expectedAmountUsdCents,
+      },
+      "PayPal webhook payment verification failed"
+    );
+
+    throw new Error(
+      "PayPal webhook capture amount or currency does not match the payment record"
+    );
+  }
+
+  payment.verifiedByWebhookAt = new Date();
+  payment.status = PAYMENT_STATUS.COMPLETED;
+  payment.paypalCaptureId = resource.id as string;
+  payment.capturedAt = new Date();
+
+  payment.history.push({
+    status: PAYMENT_STATUS.COMPLETED,
+    at: new Date(),
+    source: "webhook",
+    note: `Confirmed via verified webhook PAYMENT.CAPTURE.COMPLETED (${resource.id})`,
+  });
+
+  await payment.save();
+
+  // Ensure the associated purchase order is marked PAID.
+  const order = await PurchaseOrder.findById(payment.orderId);
+
+  if (order && order.status !== ORDER_STATUS.PAID) {
+    const previousStatus = order.status;
+
+    order.status = ORDER_STATUS.PAID;
+    order.statusHistory.push({
+      from: previousStatus,
+      to: ORDER_STATUS.PAID,
+      at: new Date(),
+      note: "Marked paid via verified PayPal webhook",
+    });
+
+    await order.save();
+  }
+}
+     else if (eventType === "PAYMENT.CAPTURE.DENIED") {
       payment.status = PAYMENT_STATUS.FAILED;
       payment.failureReason = "PayPal webhook PAYMENT.CAPTURE.DENIED";
       payment.history.push({
