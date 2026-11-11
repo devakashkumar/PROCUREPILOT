@@ -1,7 +1,6 @@
 import { IPurchaseOrder } from "../../models/PurchaseOrder.js";
 import { IPayment } from "../../models/Payment.js";
 import { PayPalClient } from "./paypal.client.js";
-import { paiseToUsdCents } from "../../utils/money.js";
 
 export interface PayPalCreateOrderResponse {
   id: string;
@@ -47,29 +46,54 @@ export class PayPalOrdersService {
     const rate = payment.fxRateInrPerUsd;
 
     // Convert each supplier group to a USD line item
-    const items = order.supplierGroups.map((g) => {
-      const groupTotalPaise = g.subtotalPaise + g.shippingPaise;
-      const groupUsdCents = paiseToUsdCents(groupTotalPaise, rate);
-      return {
-        name: `Fulfilment: ${g.supplierName}`,
-        description: `${g.lineCount} item(s) - Est. ${g.deliveryDays} day(s) delivery`,
-        unit_amount: {
-          currency_code: "USD",
-          value: (groupUsdCents / 100).toFixed(2),
-        },
-        quantity: "1",
-        category: "PHYSICAL_GOODS" as const,
-        cents: groupUsdCents,
-      };
-    });
+    const groupAmounts = order.supplierGroups.map((g) => {
+    const exactCents = (g.subtotalPaise + g.shippingPaise) / rate;
+
+  return {
+    group: g,
+    cents: Math.floor(exactCents),
+    remainder: exactCents - Math.floor(exactCents),
+  };
+});
+
+     const allocatedCents = groupAmounts.reduce(
+     (sum, item) => sum + item.cents,
+     0
+   );
+
+      const remainingCents = payment.amountUsdCents - allocatedCents;
+
+    if (
+     remainingCents < 0 ||
+     remainingCents > groupAmounts.length
+  ) {
+  throw new Error("Unable to reconcile PayPal supplier amounts");
+} 
+
+    groupAmounts
+    .sort((a, b) => b.remainder - a.remainder)
+    .slice(0, remainingCents)
+    .forEach((item) => {
+      item.cents += 1;
+  });
+
+   const items = groupAmounts.map(({ group, cents }) => ({
+    name: `Fulfilment: ${group.supplierName}`,
+    description: `${group.lineCount} item(s) - Est. ${group.deliveryDays} day(s) delivery`,
+    unit_amount: {
+    currency_code: "USD",
+    value: (cents / 100).toFixed(2),
+  },
+  quantity: "1",
+  category: "PHYSICAL_GOODS" as const,
+  cents,
+}));
 
     // Sum USD cents from items to ensure exact match with breakdown
     const totalUsdCents = items.reduce((sum, it) => sum + it.cents, 0);
     const totalUsdFormatted = (totalUsdCents / 100).toFixed(2);
 
     // Update payment's stored USD cents to match exact breakdown
-    payment.amountUsdCents = totalUsdCents;
-
     const payload = {
       intent: "CAPTURE",
       purchase_units: [
