@@ -386,6 +386,18 @@ export const Landing: React.FC = () => {
 
         {/* ─────── Mobile Companion App Showcase ─────── */}
         <section id="mobile-app" className="mt-28 sm:mt-36">
+          <Reveal>
+            <div className="mb-12">
+              <p className="text-xs font-mono uppercase tracking-[0.2em] text-muted mb-3">Field Operations</p>
+              <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-ink">
+                Procure on the go.<br className="hidden sm:block" /> Direct from retail aisles.
+              </h2>
+              <p className="mt-4 text-sm text-muted max-w-xl leading-relaxed">
+                Take autonomous purchasing off the counter. Store proprietors can dictate voice chits, scan shelf barcodes, and approve PayPal supplier splits on any Android device.
+              </p>
+            </div>
+          </Reveal>
+
           <AppDownloadWidget variant="landing" />
         </section>
 
