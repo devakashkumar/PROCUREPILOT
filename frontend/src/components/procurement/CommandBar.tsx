@@ -80,7 +80,7 @@ export function CommandBar({ onSubmit, isLoading, initialValue = "" }: CommandBa
         <div className="flex items-center justify-between mb-4 text-[11px] font-mono uppercase tracking-widest text-muted border-b border-border pb-3">
           <div className="flex items-center gap-2">
             <Terminal className="h-3.5 w-3.5 text-muted" />
-            <span className="text-ink font-semibold">Autonomous Restock Terminal</span>
+            <span className="text-ink font-semibold">Purchase Request</span>
           </div>
           <span className="text-muted hidden sm:inline">Natural Language Parsing</span>
         </div>
@@ -134,7 +134,7 @@ export function CommandBar({ onSubmit, isLoading, initialValue = "" }: CommandBa
               className="w-full sm:w-auto gap-2 font-bold text-xs h-10 px-5 shadow-[0_0_20px_rgba(0,0,0,0.1)] dark:shadow-[0_0_20px_rgba(255,255,255,0.2)]"
             >
               <Sparkles className="h-3.5 w-3.5" />
-              <span>Run Autonomous Sourcing</span>
+              <span>Find Suppliers</span>
             </Button>
           </div>
         </div>

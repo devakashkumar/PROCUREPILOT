@@ -99,7 +99,7 @@ export const Cart: React.FC = () => {
           <p className="mt-1 text-xs text-muted">Use natural language procurement to generate an optimized basket.</p>
           <Link to="/procure" className="mt-6 inline-block">
             <Button variant="primary" size="md" className="gap-2 font-bold text-xs">
-              <Sparkles className="h-3.5 w-3.5" /> Launch Procurement Agent
+              <Sparkles className="h-3.5 w-3.5" /> Start Purchase Request
             </Button>
           </Link>
         </div>

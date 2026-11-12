@@ -43,7 +43,7 @@ export const Dashboard: React.FC = () => {
             Command Dashboard
           </h1>
           <p className="mt-1 text-xs text-muted">
-            Welcome back, {user?.name?.split(" ")[0] || "Owner"}. Autonomous restock pipeline is operational.
+            Welcome back, {user?.name?.split(" ")[0] || "Owner"}. Your purchase dashboard is ready.
           </p>
         </div>
 
@@ -73,7 +73,7 @@ export const Dashboard: React.FC = () => {
                 <AnimatedNumber value={spendRupees} prefix="₹" />
               )}
             </div>
-            <p className="mt-1 text-[11px] text-muted font-mono">Settled via PayPal Sandbox</p>
+            <p className="mt-1 text-[11px] text-muted font-mono">Settled via PayPal</p>
           </div>
         </div>
 
@@ -140,7 +140,7 @@ export const Dashboard: React.FC = () => {
                 <AnimatedNumber value={savingsRupees} prefix="₹" />
               )}
             </div>
-            <p className="mt-1 text-[11px] text-muted font-mono">Knapsack tier & freight savings</p>
+            <p className="mt-1 text-[11px] text-muted font-mono">Supplier & freight savings</p>
           </div>
         </div>
       </div>
@@ -174,7 +174,7 @@ export const Dashboard: React.FC = () => {
               <Sparkles className="h-4 w-4" />
             </div>
             <h3 className="mt-4 text-base font-bold text-ink tracking-tight">
-              Autonomous Kirana Restock
+              Smart Restock
             </h3>
             <p className="mt-2 text-xs text-muted leading-relaxed font-sans">
               Enter restock requests in natural English or Hinglish. ProcurePilot matches items, compares wholesale tiers, and drafts approved purchase orders.
@@ -188,7 +188,7 @@ export const Dashboard: React.FC = () => {
 
           <Link to="/procure" className="mt-6">
             <Button variant="primary" size="md" className="w-full gap-2 font-bold text-xs h-10">
-              Launch Agent <ArrowRight className="h-3.5 w-3.5" />
+              Start Sourcing <ArrowRight className="h-3.5 w-3.5" />
             </Button>
           </Link>
         </div>
@@ -227,7 +227,7 @@ export const Dashboard: React.FC = () => {
               </div>
             </div>
           ) : (
-            <table className="w-full text-left text-xs">
+            <table className="w-full text-left text-xs min-w-[600px]">
               <thead className="border-b border-border text-muted uppercase tracking-wider font-mono text-[10px]">
                 <tr>
                   <th className="py-3 px-4">Order ID</th>

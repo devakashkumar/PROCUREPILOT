@@ -170,13 +170,13 @@ export const Landing: React.FC = () => {
 
           <Reveal>
             <p className="text-xs font-mono uppercase tracking-[0.2em] text-muted mb-10">
-              Autonomous Procurement Agent
+              Smart Purchasing Platform
             </p>
           </Reveal>
 
           <Reveal delay={0.06}>
             <h1 className="font-black text-5xl sm:text-7xl md:text-[5.5rem] lg:text-[7rem] tracking-[-0.05em] text-ink leading-[0.9] text-balance mb-8">
-              Autonomous<br />Purchasing.
+              Smarter<br />Purchasing.
             </h1>
           </Reveal>
 
@@ -197,7 +197,7 @@ export const Landing: React.FC = () => {
                   className="w-full sm:w-auto gap-2.5 text-sm font-bold h-12 px-8 shadow-lg dark:shadow-[0_0_30px_rgba(255,255,255,0.18)] hover:scale-[1.02] transition-transform"
                 >
                   <Sparkles className="h-4 w-4" />
-                  Try Autonomous Sourcing
+                  Try Smart Sourcing
                 </Button>
               </Link>
               <Link to="/products" className="w-full sm:w-auto">
@@ -418,8 +418,8 @@ export const Landing: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
               {
-                title: "Zero AI Financial Authority",
-                body: "AI never calculates authoritative pricing, chooses suppliers, or marks orders paid. All arithmetic runs in pure TypeScript.",
+                title: "Human-Controlled Approvals",
+                body: "Pricing, supplier selection, and order approval are always owner-controlled. All arithmetic is computed server-side in TypeScript.",
               },
               {
                 title: "Integer Paise & Cent Precision",
@@ -459,13 +459,13 @@ export const Landing: React.FC = () => {
               Ready to streamline<br className="hidden sm:block" /> purchasing?
             </h2>
             <p className="text-sm text-muted max-w-md mx-auto mb-10 leading-relaxed">
-              Experience autonomous multi-supplier replenishment engineered for real kirana stores and businesses.
+              Start managing wholesale purchasing — smarter sourcing, real supplier pricing, and streamlined approvals.
             </p>
             <div className="flex items-center justify-center gap-3">
               <Link to="/procure">
                 <Button variant="primary" size="lg" className="font-bold h-12 px-8 shadow-sm gap-2">
                   <Zap className="h-4 w-4" />
-                  Launch Autonomous Sourcing
+                  Start Sourcing
                 </Button>
               </Link>
               <Link to="/login">
@@ -483,9 +483,9 @@ export const Landing: React.FC = () => {
         <div className="mx-auto max-w-7xl px-4 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-5">
           <div className="flex items-center gap-3">
             <img src="/logo.png" alt="ProcurePilot" className="h-5 w-5 object-contain opacity-80" />
-            <span className="font-bold text-ink font-sans text-sm">ProcurePilot AI</span>
+            <span className="font-bold text-ink font-sans text-sm">ProcurePilot</span>
             <span className="opacity-30">·</span>
-            <span>Autonomous Purchasing</span>
+            <span>Wholesale Purchasing</span>
             <span className="opacity-30">·</span>
             <span>MIT License</span>
           </div>

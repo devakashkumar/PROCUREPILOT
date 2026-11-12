@@ -40,7 +40,7 @@ export const PayPalCheckout: React.FC<PayPalCheckoutProps> = ({
       toast.loading("Executing server capture & cryptographic verification...", { id: "quick-pay" });
       const captureResult = await paymentsApi.capture(created.paypalOrderId, true);
 
-      toast.success("Sandbox payment verified & captured!", { id: "quick-pay" });
+      toast.success("Payment verified & captured!", { id: "quick-pay" });
       onSuccess(captureResult.paymentId || created.paymentId);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Payment capture failed";
@@ -364,7 +364,7 @@ export const PayPalCheckout: React.FC<PayPalCheckoutProps> = ({
               isLoading={isCapturing}
             >
               <Zap className="h-4 w-4 fill-current" />
-              Complete Sandbox Payment Now
+              Complete Payment Now
               <ArrowRight className="h-4 w-4 ml-auto" />
             </Button>
 

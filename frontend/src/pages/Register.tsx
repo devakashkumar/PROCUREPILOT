@@ -158,10 +158,10 @@ export const Register: React.FC = () => {
             />
             <div>
               <span className="font-extrabold text-lg tracking-tight text-ink block leading-none">
-                ProcurePilot <span className="font-mono text-xs font-semibold uppercase px-1.5 py-0.5 rounded bg-ink/5 dark:bg-white/10 text-muted ml-1">AI</span>
+                ProcurePilot
               </span>
               <span className="font-mono text-[10px] text-muted uppercase tracking-widest mt-1 block">
-                Wholesale Purchasing Agent
+                Wholesale Purchasing
               </span>
             </div>
           </Link>
@@ -216,7 +216,7 @@ export const Register: React.FC = () => {
                 </div>
               </div>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-600 dark:text-sky-400 font-bold">
-                PAISE ➔ CENTS
+                INR → USD
               </span>
             </div>
           </div>
@@ -229,7 +229,7 @@ export const Register: React.FC = () => {
                   <ShieldCheck className="h-4 w-4" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-ink">Zero AI Financial Authority</h4>
+                  <h4 className="text-xs font-bold text-ink">Human-Controlled Approvals</h4>
                   <p className="text-[11px] text-muted font-sans">All arithmetic strictly enforced in TypeScript</p>
                 </div>
               </div>
@@ -524,14 +524,14 @@ export const Register: React.FC = () => {
               to="/login"
               className="hover:text-ink transition-colors flex items-center gap-1 underline underline-offset-4"
             >
-              Switch to 1-Click Sandbox Demo →
+              Sign in to Demo Account →
             </Link>
           </div>
         </div>
 
         {/* Bottom copyright / info */}
         <div className="mt-12 text-center text-[10px] font-mono text-muted opacity-75">
-          ProcurePilot AI · Autonomous Sourcing & PayPal Orders v2 Settlement Architecture
+          ProcurePilot · Smart Wholesale Purchasing
         </div>
       </div>
     </div>

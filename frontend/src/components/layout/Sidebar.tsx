@@ -80,9 +80,7 @@ export function Sidebar({ className }: { className?: string }) {
                 />
                 <span className="relative z-10">{item.label}</span>
                 {item.highlight && (
-                  <span className="relative z-10 ml-auto font-mono text-[9px] uppercase tracking-widest text-muted">
-                    AI
-                  </span>
+                  <span className="relative z-10 ml-auto h-1.5 w-1.5 rounded-full bg-emerald-500" />
                 )}
               </Link>
             );
