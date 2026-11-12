@@ -130,7 +130,7 @@ export const Analytics: React.FC = () => {
           <p className="text-xs font-mono text-muted py-6 text-center">No supplier transactions recorded yet.</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+            <table className="w-full text-left text-xs min-w-[600px]">
               <thead className="border-b border-border text-muted uppercase tracking-wider font-mono text-[10px]">
                 <tr>
                   <th className="py-2.5 px-3">Supplier Name</th>

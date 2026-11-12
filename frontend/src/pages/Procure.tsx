@@ -194,7 +194,7 @@ export const Procure: React.FC = () => {
         <div>
           <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-muted">
             <Sparkles className="h-3.5 w-3.5 text-muted" />
-            <span>Autonomous Purchasing Agent</span>
+            <span>Purchasing Assistant</span>
           </div>
           <h1 className="mt-1 text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
             Procurement Pipeline
@@ -233,8 +233,8 @@ export const Procure: React.FC = () => {
       {stage === "running" && (
         <div className="py-12">
           <div className="text-center mb-8">
-            <h3 className="text-xl font-bold text-ink tracking-tight">Agent Sourcing in Progress</h3>
-            <p className="text-xs text-muted mt-1 font-mono">Executing AI extraction, catalog lookups, and knapsack DP</p>
+            <h3 className="text-xl font-bold text-ink tracking-tight">Sourcing in Progress</h3>
+            <p className="text-xs text-muted mt-1 font-mono">Searching catalog and comparing supplier prices</p>
           </div>
           <AgentTimeline steps={steps} currentStepId={currentStepId} />
         </div>

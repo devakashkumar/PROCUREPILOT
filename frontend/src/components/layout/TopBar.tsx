@@ -31,19 +31,15 @@ export function TopBar({ onMenuClick }: TopBarProps) {
         </div>
 
         <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-muted">
-          <span className="text-ink font-medium">Sandbox</span>
+          <span className="text-ink font-medium">Live</span>
           <span className="opacity-40">/</span>
           <span>₹88/USD</span>
-          <span className="opacity-40">/</span>
-          <span className="text-muted">Deterministic Engine Active</span>
         </div>
       </div>
 
       {/* Zone 2: Center - Subtle Minimal Indicator */}
       <div className="hidden lg:flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-muted">
-        <span>Autonomous Procurement</span>
-        <span>·</span>
-        <span className="text-muted">Zero Float Math</span>
+        <span>Purchase Management</span>
       </div>
 
       {/* Zone 3: Right */}

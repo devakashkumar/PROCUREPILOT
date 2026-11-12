@@ -148,7 +148,7 @@ export const OrderDetail: React.FC = () => {
           <div className="rounded-[10px] border border-border bg-surface-elevated p-4 text-xs text-ink/80">
             <div className="flex items-center gap-2 font-mono font-bold text-ink mb-1">
               <ShieldCheck className="h-4 w-4 text-ink" />
-              <span>SINGLE-SETTLEMENT MULTI-VENDOR DISPATCH</span>
+              <span>Multi-vendor order</span>
             </div>
             <p className="text-muted leading-relaxed font-sans">
               ProcurePilot aggregates this multi-vendor restock into a single unified payment. You settle once via PayPal Sandbox, and fulfillment sub-lines are partitioned across the {order.supplierGroups.length} regional wholesale distributors below.

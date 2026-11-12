@@ -310,7 +310,7 @@ export const Products: React.FC = () => {
                 className="gap-2 font-bold text-xs"
               >
                 <Sparkles className="h-3.5 w-3.5" />
-                Source with AI Agent
+                Create Purchase Request
               </Button>
             </div>
           </div>

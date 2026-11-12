@@ -122,7 +122,7 @@ export const Orders: React.FC = () => {
               </div>
             </div>
           ) : (
-            <table className="w-full text-left text-xs">
+            <table className="w-full text-left text-xs min-w-[600px]">
               <thead className="border-b border-border bg-surface-elevated text-muted uppercase tracking-wider font-mono text-[10px]">
                 <tr>
                   <th className="py-3 px-4">Order Number</th>
