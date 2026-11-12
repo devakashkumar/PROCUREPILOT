@@ -17,6 +17,7 @@ import { SpendChart } from "../components/charts/SpendChart.js";
 import { StatusBadge } from "../components/orders/StatusBadge.js";
 import { Button } from "../components/ui/Button.js";
 import { Skeleton } from "../components/ui/Skeleton.js";
+import { AppDownloadWidget } from "../components/mobile/AppDownloadWidget.js";
 
 export const Dashboard: React.FC = () => {
   const { user, business } = useAuthStore();
@@ -192,6 +193,9 @@ export const Dashboard: React.FC = () => {
           </Link>
         </div>
       </div>
+
+      {/* Mobile Companion App Download Widget */}
+      <AppDownloadWidget variant="dashboard" />
 
       {/* Recent Orders Section */}
       <div className="rounded-[12px] border border-border bg-surface p-6 shadow-sm">

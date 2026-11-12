@@ -12,7 +12,7 @@
 [![React](https://img.shields.io/badge/React-18.3-61dafb.svg?style=for-the-badge&logo=react&logoColor=white)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-6.0-646cff.svg?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind-v4-38bdf8.svg?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![Tests](https://img.shields.io/badge/Tests-43%2F43_Passing-brightgreen.svg?style=for-the-badge)]()
+[![Tests](https://img.shields.io/badge/Tests-45%2F45_Passing-brightgreen.svg?style=for-the-badge)]()
 </div>
 
 ---
@@ -20,25 +20,26 @@
 ## Table of Contents
 1. [🏆 PayPal Hackathon Feature Spotlight: Global Settlement & Sandbox Architecture](#1--paypal-hackathon-feature-spotlight-global-settlement--sandbox-architecture)
 2. [Product Overview & Agent Architecture](#2-product-overview--agent-architecture)
-3. [Non-Negotiable Safety & Financial Guardrails](#3-non-negotiable-safety--financial-guardrails)
-4. [Dual-Currency Engine: INR Paise to USD Cents](#4-dual-currency-engine-inr-paise-to-usd-cents)
-5. [Repository Structure](#5-repository-structure)
-6. [How to Run (Local, LAN, & Internet)](#6-how-to-run-local-lan--internet)
+3. [📱 Mobile Companion App & Android APK Distribution](#3-mobile-companion-app--android-apk-distribution)
+4. [Non-Negotiable Safety & Financial Guardrails](#4-non-negotiable-safety--financial-guardrails)
+5. [Dual-Currency Engine: INR Paise to USD Cents](#5-dual-currency-engine-inr-paise-to-usd-cents)
+6. [Repository Structure](#6-repository-structure)
+7. [How to Run (Local, LAN, & Internet)](#7-how-to-run-local-lan--internet)
    - [Prerequisites](#prerequisites)
    - [Option A: 1-Click Quickstart (Embedded DB, Zero Config)](#option-a-1-click-quickstart-embedded-db-zero-config)
    - [Option B: Production Configuration (MongoDB Atlas, Gemini 3.5, PayPal)](#option-b-production-configuration)
    - [Worldwide Access via Secure Tunnel (ngrok / Cloudflare)](#worldwide-access-via-secure-tunnel-ngrok--cloudflare)
-7. [Hackathon Judge Quick-Start & Live Evaluation Script](#7-hackathon-judge-quick-start--live-evaluation-script)
-8. [Testing & Quality Verification](#8-testing--quality-verification)
-9. [Environment Variables Reference](#9-environment-variables-reference)
-10. [Teammates Roadmap: What's Done & What to Do](#10-teammates-roadmap-whats-done--what-to-do)
+8. [Hackathon Judge Quick-Start & Live Evaluation Script](#8-hackathon-judge-quick-start--live-evaluation-script)
+9. [Testing & Quality Verification](#9-testing--quality-verification)
+10. [Environment Variables Reference](#10-environment-variables-reference)
+11. [Teammates Roadmap: What's Done & What to Do](#11-teammates-roadmap-whats-done--what-to-do)
     - [📱 Flutter Mobile Companion App](#-flutter-mobile-developer-guide)
     - [🤖 AI / ML & Vernacular Prompt Engineer](#-ai--ml--vernacular-prompt-engineer)
     - [💳 Payments & Global Settlement Engineer](#-payments--domestic-settlement-engineer)
     - [🚚 Supplier Dispatch & Logistics Lead](#-supplier-dispatch--logistics-lead)
     - [☁️ DevOps & Cloud Deployment Lead](#-devops--cloud-deployment-lead)
-11. [Documentation & API Reference](#11-documentation--api-reference)
-12. [License](#12-license)
+12. [Documentation & API Reference](#12-documentation--api-reference)
+13. [License](#13-license)
 
 ---
 
@@ -110,7 +111,45 @@ ProcurePilot AI automates this entire lifecycle end-to-end:
 
 ---
 
-## 3. Non-Negotiable Safety & Financial Guardrails
+## 3. 📱 Mobile Companion App & Android APK Distribution
+
+ProcurePilot ships with a native-style **Mobile Companion Experience** specifically engineered for retail kirana proprietors and supermarket stock managers who run inventory checks directly from their store aisles.
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                        PROCUREPILOT MOBILE COMPANION ARCHITECTURE                      │
+├──────────────────────────┬─────────────────────────────┬───────────────────────────────┤
+│ 1. FLOOR CAPTURE         │ 2. EDGE AI RESTOCKING       │ 3. GLOBAL SANDBOX SETTLEMENT  │
+│ • Vernacular Voice Chits │ • Offline SKU Matching      │ • Biometric 1-Tap Sign-Off    │
+│ • GTIN-13 Shelf Barcodes │ • 0/1 Knapsack Allocations  │ • PayPal Orders v2 Sandbox    │
+│ • Instant Item Parsing   │ • Dynamic Margin Tickers    │ • Local Sub-Line Push Alerts  │
+└──────────────────────────┴─────────────────────────────┴───────────────────────────────┘
+```
+
+### Key Mobile Companion Features:
+1. **Interactive APK Download Widget (`AppDownloadWidget`)**:
+   - Integrated into both the **Landing Page** (`#mobile-app`) and the **Merchant Command Dashboard**.
+   - Displays real-time download metadata: Package size (~24 MB), Android version target (Android 9.0+), architecture (`ARM64` / Universal), and SHA-256 verification status.
+2. **On-Screen High-Contrast Camera QR Scanner**:
+   - Store owners can click **Scan QR** on the desktop web app to open an instantaneous, high-contrast SVG QR code modal.
+   - Scan directly with any phone camera to trigger the APK package download without needing to connect cords or transfer files manually.
+3. **Vernacular Speech-to-Chit Dictation**:
+   - Proprietors speak naturally in Hindi, Hinglish, or regional dialects (e.g., *"20 tel, 30 basmati chawal under pandrah hazaar"*).
+   - Google Gemini parses requirements into structured SKUs, units, and hard price caps on the fly.
+4. **GTIN-13 Packaging Barcode Scanner**:
+   - Direct camera-based barcode scanning instantly queries the backend catalog of 38 fast-moving SKUs and fetches real-time wholesale distributor tier quotes.
+5. **Real-Time Push Alerts for Multi-Supplier Split Shipments**:
+   - Instant notifications as local distributors in Mumbai accept, pack, and dispatch sub-order lines.
+
+#### 4-Step Android Installation Guide:
+```
+[1. Scan QR / Click Download] ➔ [2. Select "Download Anyway"] ➔ [3. Allow Browser Install] ➔ [4. Sign In & Procure]
+```
+*Configurable via `VITE_APK_DOWNLOAD_URL` in `frontend/.env`.*
+
+---
+
+## 4. Non-Negotiable Safety & Financial Guardrails
 
 1. **Zero AI Financial Authority**: AI models *never* compute authoritative pricing, select winning suppliers independently, or mark orders paid. AI is strictly constrained to (a) extracting structured JSON requirements from prose and (b) generating human-readable explanations. All monetary arithmetic, supplier matching, and state transitions are executed by deterministic TypeScript code.
 2. **Integer Paise & Cent Precision**: All money in the database and API payloads is stored as integer `paise` (INR) and integer `cents` (USD). Floating-point math is strictly forbidden (`utils/money.ts`).
@@ -121,7 +160,7 @@ ProcurePilot AI automates this entire lifecycle end-to-end:
 
 ---
 
-## 4. Dual-Currency Engine: INR Paise to USD Cents
+## 5. Dual-Currency Engine: INR Paise to USD Cents
 
 Because regional distributors operate locally in Indian Rupees while PayPal Sandbox operates internationally in USD, ProcurePilot uses an integer-safe currency conversion service (`services/currency/`):
 
@@ -140,7 +179,7 @@ $$\text{USD Cents} = \left\lceil \frac{\text{INR Paise}}{\text{DEMO\_INR\_PER\_U
 
 ---
 
-## 5. Repository Structure
+## 6. Repository Structure
 
 ```
 procurepilot-ai/
@@ -208,7 +247,7 @@ procurepilot-ai/
 
 ---
 
-## 6. How to Run (Local, LAN, & Internet)
+## 7. How to Run (Local, LAN, & Internet)
 
 ### Prerequisites
 - **Node.js**: v20.x or higher (`node -v`)
@@ -269,7 +308,7 @@ npx --yes cloudflared tunnel --url http://localhost:5173
 
 ---
 
-## 7. Hackathon Judge Quick-Start & Live Evaluation Script
+## 8. Hackathon Judge Quick-Start & Live Evaluation Script
 
 Follow this step-by-step walkthrough to evaluate the entire autonomous procurement & PayPal settlement pipeline:
 
@@ -320,7 +359,7 @@ Follow this step-by-step walkthrough to evaluate the entire autonomous procureme
 
 ---
 
-## 8. Testing & Quality Verification
+## 9. Testing & Quality Verification
 
 ### Run Backend Unit & Integration Tests (43 tests)
 ```bash
@@ -351,7 +390,7 @@ npm run build
 
 ---
 
-## 9. Environment Variables Reference
+## 10. Environment Variables Reference
 
 ### Backend (`backend/.env`)
 
@@ -379,10 +418,11 @@ npm run build
 |---|---|---|---|
 | `VITE_API_BASE_URL` | No | `""` | Base API URL. Leave empty to use Vite's `/api` proxy |
 | `VITE_PAYPAL_CLIENT_ID`| No | `test` | Public PayPal Client ID for JS SDK buttons |
+| `VITE_APK_DOWNLOAD_URL`| No | `#` | Public URL for the Android APK binary package |
 
 ---
 
-## 10. Teammates Roadmap: What's Done & What to Do
+## 11. Teammates Roadmap: What's Done & What to Do
 
 ### 📱 Flutter Mobile Developer Guide
 > **Directory**: `mobile/`  
@@ -451,7 +491,7 @@ npm run build
 
 ---
 
-## 11. Documentation & API Reference
+## 12. Documentation & API Reference
 
 Comprehensive architectural and API documentation is maintained in the [`docs/`](docs/) directory:
 
@@ -463,6 +503,6 @@ Comprehensive architectural and API documentation is maintained in the [`docs/`]
 
 ---
 
-## 12. License
+## 13. License
 
 MIT © 2026 ProcurePilot AI. Built for the PayPal Hackathon.
