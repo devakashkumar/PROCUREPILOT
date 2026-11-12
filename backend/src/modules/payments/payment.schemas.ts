@@ -7,7 +7,9 @@ export const createPaymentSchema = z.object({
 
 export const capturePaymentSchema = z.object({
   paypalOrderId: z.string().min(1, "paypalOrderId is required"),
-  sandboxSimulated: z.boolean().optional(),
+  sandboxSimulated: z
+    .union([z.boolean(), z.string().transform((v) => v === "true")])
+    .optional(),
 });
 
 export const cancelPaymentSchema = z.object({

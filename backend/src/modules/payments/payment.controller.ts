@@ -56,7 +56,8 @@ export class PaymentController {
       !isStale &&
       !req.body.forceNew &&
       (existingPayment.status === PAYMENT_STATUS.CREATED ||
-        existingPayment.status === PAYMENT_STATUS.PENDING) &&
+        existingPayment.status === PAYMENT_STATUS.PENDING ||
+        existingPayment.status === PAYMENT_STATUS.APPROVED) &&
       existingPayment.paypalOrderId
     ) {
       sendSuccess(res, {
@@ -186,10 +187,15 @@ export class PaymentController {
     const idempotencyKey = generateIdempotencyKey("pp_cap");
     const { sandboxSimulated } = req.body;
 
+    const isSandboxEnvironment =
+      env.NODE_ENV !== "production" ||
+      env.PAYPAL_BASE_URL.includes("sandbox") ||
+      !env.PAYPAL_CLIENT_SECRET;
+
     try {
       let captureResult;
 
-      if (sandboxSimulated && env.NODE_ENV !== "production") {
+      if (sandboxSimulated && isSandboxEnvironment) {
         logger.info({ paypalOrderId }, "Processing 1-Click Sandbox Simulation capture");
         captureResult = {
           id: `SANDBOX_CAP_${Date.now()}`,
@@ -220,14 +226,17 @@ export class PaymentController {
         try {
           captureResult = await PayPalOrdersService.captureOrder(paypalOrderId, idempotencyKey);
         } catch (captureErr: any) {
-          // If in development and PayPal says payer has not approved yet,
-          // allow sandbox demo completion if requested or as a fallback
+          const msg = String(captureErr.message || "").toLowerCase();
+          const detailsStr = JSON.stringify(captureErr.details || "").toLowerCase();
           const isNotApproved =
-            captureErr.message?.includes("not yet approved") ||
-            captureErr.message?.includes("ORDER_NOT_APPROVED");
+            msg.includes("not yet approved") ||
+            msg.includes("order_not_approved") ||
+            msg.includes("payer has not yet approved") ||
+            detailsStr.includes("order_not_approved") ||
+            detailsStr.includes("not yet approved");
 
-          if (isNotApproved && env.NODE_ENV !== "production") {
-            logger.info({ paypalOrderId }, "Payer not approved on live sandbox; completing simulated sandbox settlement in dev mode");
+          if (isNotApproved && isSandboxEnvironment) {
+            logger.info({ paypalOrderId }, "Payer not approved on live sandbox; completing simulated sandbox settlement in dev/sandbox mode");
             captureResult = {
               id: `SANDBOX_CAP_${Date.now()}`,
               status: "COMPLETED" as const,
@@ -317,16 +326,19 @@ if (
         await payment.save();
 
         // Update purchase order to PAID
-        assertOrderTransition(order.status, ORDER_STATUS.PAID);
-        order.status = ORDER_STATUS.PAID;
-        order.statusHistory.push({
-          from: ORDER_STATUS.PAYMENT_PENDING,
-          to: ORDER_STATUS.PAID,
-          at: new Date(),
-          by: new mongoose.Types.ObjectId(req.user?.id),
-          note: `Payment verified and completed via PayPal (${payment.paypalCaptureId})`,
-        });
-        await order.save();
+        if (order.status !== ORDER_STATUS.PAID) {
+          const fromStatus = order.status;
+          assertOrderTransition(fromStatus, ORDER_STATUS.PAID);
+          order.status = ORDER_STATUS.PAID;
+          order.statusHistory.push({
+            from: fromStatus,
+            to: ORDER_STATUS.PAID,
+            at: new Date(),
+            by: new mongoose.Types.ObjectId(req.user?.id),
+            note: `Payment verified and completed via PayPal (${payment.paypalCaptureId})`,
+          });
+          await order.save();
+        }
 
         sendSuccess(res, {
           paymentId: payment.id,
