@@ -14,6 +14,7 @@ import { useAuthStore } from "../store/authStore.js";
 import { Button } from "../components/ui/Button.js";
 import { ThemeToggle } from "../components/layout/ThemeToggle.js";
 import { Reveal } from "../components/motion/Reveal.js";
+import { AppDownloadWidget } from "../components/mobile/AppDownloadWidget.js";
 
 const DEMO_PROMPTS = [
   {
@@ -131,6 +132,7 @@ export const Landing: React.FC = () => {
           <nav className="hidden md:flex items-center gap-7 text-xs text-muted font-medium">
             <a href="#workflow" className="hover:text-ink transition-colors">How it Works</a>
             <a href="#how-it-works" className="hover:text-ink transition-colors">Architecture</a>
+            <a href="#mobile-app" className="hover:text-ink transition-colors">Mobile App</a>
             <a href="#guardrails" className="hover:text-ink transition-colors">Guardrails</a>
             <Link to="/products" className="hover:text-ink transition-colors">Catalog</Link>
           </nav>
@@ -382,6 +384,11 @@ export const Landing: React.FC = () => {
           </div>
         </section>
 
+        {/* ─────── Mobile Companion App Showcase ─────── */}
+        <section id="mobile-app" className="mt-28 sm:mt-36">
+          <AppDownloadWidget variant="landing" />
+        </section>
+
         {/* ─────── Guardrails ─────── */}
         <section id="guardrails" className="mt-28 sm:mt-36 rounded-2xl border border-border bg-surface p-8 sm:p-12">
           <Reveal>
@@ -471,6 +478,7 @@ export const Landing: React.FC = () => {
             <span>MIT License</span>
           </div>
           <div className="flex items-center gap-6">
+            <a href="#mobile-app" className="hover:text-ink transition-colors">Mobile APK</a>
             <Link to="/login" className="hover:text-ink transition-colors">Login</Link>
             <Link to="/procure" className="hover:text-ink transition-colors">Procure</Link>
             <Link to="/products" className="hover:text-ink transition-colors">Catalog</Link>

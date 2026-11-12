@@ -57,7 +57,12 @@ export function createApp(): Express {
       origin: (origin, callback) => {
         // Allow mobile apps, curl, Postman (no origin header)
         if (!origin) return callback(null, true);
-        if (allowedOrigins.includes(origin) || allowedOrigins.includes("*")) {
+        if (
+          env.NODE_ENV === "development" ||
+          allowedOrigins.includes(origin) ||
+          allowedOrigins.includes("*") ||
+          /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)
+        ) {
           return callback(null, true);
         }
         return callback(new Error(`Origin ${origin} not allowed by CORS`));

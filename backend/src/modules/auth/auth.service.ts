@@ -39,6 +39,7 @@ export class AuthService {
     businessType: string;
     city: string;
     gstin?: string;
+    monthlyBudgetPaise?: number;
   }): Promise<{ user: IUser; business: IBusiness; tokens: AuthTokens }> {
     const existing = await User.findOne({ email: data.email });
     if (existing) {
@@ -57,7 +58,7 @@ export class AuthService {
       type: data.businessType,
       city: data.city,
       gstin: data.gstin,
-      monthlyBudgetPaise: 20000000, // ₹2,00,000 default
+      monthlyBudgetPaise: data.monthlyBudgetPaise ?? 20000000, // ₹2,00,000 default
       currency: "INR",
       preferences: {
         priority: "balanced",

@@ -56,7 +56,8 @@ export class PaymentController {
       !isStale &&
       !req.body.forceNew &&
       (existingPayment.status === PAYMENT_STATUS.CREATED ||
-        existingPayment.status === PAYMENT_STATUS.PENDING) &&
+        existingPayment.status === PAYMENT_STATUS.PENDING ||
+        existingPayment.status === PAYMENT_STATUS.APPROVED) &&
       existingPayment.paypalOrderId
     ) {
       sendSuccess(res, {
@@ -186,10 +187,15 @@ export class PaymentController {
     const idempotencyKey = generateIdempotencyKey("pp_cap");
     const { sandboxSimulated } = req.body;
 
+    const isSandboxEnvironment =
+      env.NODE_ENV !== "production" ||
+      env.PAYPAL_BASE_URL.includes("sandbox") ||
+      !env.PAYPAL_CLIENT_SECRET;
+
     try {
       let captureResult;
 
-      if (sandboxSimulated && env.NODE_ENV !== "production") {
+      if (sandboxSimulated && isSandboxEnvironment) {
         logger.info({ paypalOrderId }, "Processing 1-Click Sandbox Simulation capture");
         captureResult = {
           id: `SANDBOX_CAP_${Date.now()}`,
@@ -220,14 +226,17 @@ export class PaymentController {
         try {
           captureResult = await PayPalOrdersService.captureOrder(paypalOrderId, idempotencyKey);
         } catch (captureErr: any) {
-          // If in development and PayPal says payer has not approved yet,
-          // allow sandbox demo completion if requested or as a fallback
+          const msg = String(captureErr.message || "").toLowerCase();
+          const detailsStr = JSON.stringify(captureErr.details || "").toLowerCase();
           const isNotApproved =
-            captureErr.message?.includes("not yet approved") ||
-            captureErr.message?.includes("ORDER_NOT_APPROVED");
+            msg.includes("not yet approved") ||
+            msg.includes("order_not_approved") ||
+            msg.includes("payer has not yet approved") ||
+            detailsStr.includes("order_not_approved") ||
+            detailsStr.includes("not yet approved");
 
-          if (isNotApproved && env.NODE_ENV !== "production") {
-            logger.info({ paypalOrderId }, "Payer not approved on live sandbox; completing simulated sandbox settlement in dev mode");
+          if (isNotApproved && isSandboxEnvironment) {
+            logger.info({ paypalOrderId }, "Payer not approved on live sandbox; completing simulated sandbox settlement in dev/sandbox mode");
             captureResult = {
               id: `SANDBOX_CAP_${Date.now()}`,
               status: "COMPLETED" as const,
@@ -271,21 +280,39 @@ export class PaymentController {
 
       if (captureStatus === "COMPLETED") {
         // --- STRICT SERVER-SIDE VERIFICATION ---
-        const capturedAmountUsd = parseFloat(capture?.amount?.value || "0");
-        const storedAmountUsd = payment.amountUsdCents / 100;
+// --- STRICT SERVER-SIDE PAYMENT VERIFICATION ---
 
-        // Verify captured amount equals stored amount (within 0.01 tolerance)
-        if (Math.abs(capturedAmountUsd - storedAmountUsd) > 0.01 && capturedAmountUsd > 0) {
-          logger.error(
-            { capturedAmountUsd, storedAmountUsd },
-            "Captured amount mismatch with stored payment amount"
-          );
-          throw new ApiError(
-            400,
-            ERROR_CODES.PAYMENT_ERROR,
-            "Captured payment amount does not match authoritative purchase order amount"
-          );
-        }
+const capturedAmountValue = capture?.amount?.value;
+const capturedCurrency = capture?.amount?.currency_code;
+const capturedAmountUsd = Number(capturedAmountValue);
+const storedAmountUsdCents = payment.amountUsdCents;
+
+if (
+  !capture ||
+  !capture.id ||
+  capturedCurrency !== "USD" ||
+  !Number.isFinite(capturedAmountUsd) ||
+  capturedAmountUsd <= 0 ||
+  storedAmountUsdCents <= 0 ||
+  Math.round(capturedAmountUsd * 100) !== storedAmountUsdCents
+) {
+  logger.error(
+    {
+      captureId: capture?.id,
+      capturedAmountUsd,
+      capturedCurrency,
+      storedAmountUsdCents,
+    },
+    "PayPal capture verification failed"
+  );
+
+  throw new ApiError(
+    400,
+    ERROR_CODES.PAYMENT_ERROR,
+    "Captured payment amount or currency does not match the authoritative payment record"
+  );
+}
+
 
         payment.paypalCaptureId = capture?.id || captureResult.id;
         payment.status = PAYMENT_STATUS.COMPLETED;
@@ -299,16 +326,19 @@ export class PaymentController {
         await payment.save();
 
         // Update purchase order to PAID
-        assertOrderTransition(order.status, ORDER_STATUS.PAID);
-        order.status = ORDER_STATUS.PAID;
-        order.statusHistory.push({
-          from: ORDER_STATUS.PAYMENT_PENDING,
-          to: ORDER_STATUS.PAID,
-          at: new Date(),
-          by: new mongoose.Types.ObjectId(req.user?.id),
-          note: `Payment verified and completed via PayPal (${payment.paypalCaptureId})`,
-        });
-        await order.save();
+        if (order.status !== ORDER_STATUS.PAID) {
+          const fromStatus = order.status;
+          assertOrderTransition(fromStatus, ORDER_STATUS.PAID);
+          order.status = ORDER_STATUS.PAID;
+          order.statusHistory.push({
+            from: fromStatus,
+            to: ORDER_STATUS.PAID,
+            at: new Date(),
+            by: new mongoose.Types.ObjectId(req.user?.id),
+            note: `Payment verified and completed via PayPal (${payment.paypalCaptureId})`,
+          });
+          await order.save();
+        }
 
         sendSuccess(res, {
           paymentId: payment.id,
@@ -553,34 +583,73 @@ export class PaymentController {
       logger.info({ resourceId: resource.id, eventType }, "No matching payment record found for webhook");
       return;
     }
+     if (eventType === "PAYMENT.CAPTURE.COMPLETED") {
+  const amount = resource.amount as
+    | { currency_code?: string; value?: string }
+    | undefined;
 
-    if (eventType === "PAYMENT.CAPTURE.COMPLETED") {
-      payment.verifiedByWebhookAt = new Date();
-      payment.status = PAYMENT_STATUS.COMPLETED;
-      if (resource.id) {
-        payment.paypalCaptureId = resource.id as string;
-      }
-      payment.history.push({
-        status: PAYMENT_STATUS.COMPLETED,
-        at: new Date(),
-        source: "webhook",
-        note: `Confirmed via webhook PAYMENT.CAPTURE.COMPLETED (${resource.id})`,
-      });
-      await payment.save();
+  const capturedAmountUsd = Number(amount?.value);
+  const expectedAmountUsdCents = payment.amountUsdCents;
 
-      // Ensure order is marked PAID
-      const order = await PurchaseOrder.findById(payment.orderId);
-      if (order && order.status !== ORDER_STATUS.PAID) {
-        order.status = ORDER_STATUS.PAID;
-        order.statusHistory.push({
-          from: order.status,
-          to: ORDER_STATUS.PAID,
-          at: new Date(),
-          note: "Marked paid via verified PayPal webhook",
-        });
-        await order.save();
-      }
-    } else if (eventType === "PAYMENT.CAPTURE.DENIED") {
+  const isValidCapture =
+    typeof resource.id === "string" &&
+    resource.id.length > 0 &&
+    payment.currency === "USD" &&
+    amount?.currency_code === "USD" &&
+    Number.isFinite(capturedAmountUsd) &&
+    capturedAmountUsd > 0 &&
+    expectedAmountUsdCents > 0 &&
+    Math.round(capturedAmountUsd * 100) === expectedAmountUsdCents;
+
+  if (!isValidCapture) {
+    logger.error(
+      {
+        resourceId: resource.id,
+        receivedCurrency: amount?.currency_code,
+        receivedAmount: amount?.value,
+        expectedCurrency: payment.currency,
+        expectedAmountUsdCents,
+      },
+      "PayPal webhook payment verification failed"
+    );
+
+    throw new Error(
+      "PayPal webhook capture amount or currency does not match the payment record"
+    );
+  }
+
+  payment.verifiedByWebhookAt = new Date();
+  payment.status = PAYMENT_STATUS.COMPLETED;
+  payment.paypalCaptureId = resource.id as string;
+  payment.capturedAt = new Date();
+
+  payment.history.push({
+    status: PAYMENT_STATUS.COMPLETED,
+    at: new Date(),
+    source: "webhook",
+    note: `Confirmed via verified webhook PAYMENT.CAPTURE.COMPLETED (${resource.id})`,
+  });
+
+  await payment.save();
+
+  // Ensure the associated purchase order is marked PAID.
+  const order = await PurchaseOrder.findById(payment.orderId);
+
+  if (order && order.status !== ORDER_STATUS.PAID) {
+    const previousStatus = order.status;
+
+    order.status = ORDER_STATUS.PAID;
+    order.statusHistory.push({
+      from: previousStatus,
+      to: ORDER_STATUS.PAID,
+      at: new Date(),
+      note: "Marked paid via verified PayPal webhook",
+    });
+
+    await order.save();
+  }
+}
+     else if (eventType === "PAYMENT.CAPTURE.DENIED") {
       payment.status = PAYMENT_STATUS.FAILED;
       payment.failureReason = "PayPal webhook PAYMENT.CAPTURE.DENIED";
       payment.history.push({

@@ -22,8 +22,8 @@ export interface CapturePaymentResponse {
 }
 
 export const paymentsApi = {
-  create: (orderId: string) =>
-    apiClient.post<unknown, CreatePaymentResponse>("/payments/create", { orderId }),
+  create: (orderId: string, forceNew?: boolean) =>
+    apiClient.post<unknown, CreatePaymentResponse>("/payments/create", { orderId, forceNew }),
 
   capture: (paypalOrderId: string, sandboxSimulated?: boolean) =>
     apiClient.post<unknown, CapturePaymentResponse>("/payments/capture", { paypalOrderId, sandboxSimulated }),

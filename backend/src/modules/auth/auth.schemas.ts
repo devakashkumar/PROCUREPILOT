@@ -12,6 +12,7 @@ export const registerSchema = z.object({
   businessType: z.string().min(2, "Business type must be at least 2 characters").max(50),
   city: z.string().min(2, "City must be at least 2 characters").max(100),
   gstin: z.string().optional(),
+  monthlyBudgetPaise: z.number().int().min(100000, "Monthly budget must be at least ₹1,000").optional(),
 });
 
 export const loginSchema = z.object({
