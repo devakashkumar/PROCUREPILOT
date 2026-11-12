@@ -56,7 +56,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             <Loader2 className="h-4 w-4 animate-spin" />
           </span>
         )}
-        <span className={cn("inline-flex items-center justify-center gap-2 max-w-full flex-wrap", isLoading && "opacity-0")}>
+        <span className={cn("inline-flex items-center justify-center gap-2 max-w-full whitespace-nowrap", isLoading && "opacity-0")}>
           {children}
         </span>
       </button>

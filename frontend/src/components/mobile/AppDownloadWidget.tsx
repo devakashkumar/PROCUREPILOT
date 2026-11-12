@@ -109,20 +109,20 @@ export const AppDownloadWidget: React.FC<AppDownloadWidgetProps> = ({
                 variant="primary"
                 size="sm"
                 onClick={handleDownloadClick}
-                className="flex-1 md:flex-initial gap-2 font-bold text-xs h-10 px-4 shadow-sm cursor-pointer"
+                className="flex-1 md:flex-initial gap-2 font-bold text-xs h-10 px-4 shadow-sm cursor-pointer whitespace-nowrap"
               >
                 <Download className="h-3.5 w-3.5 stroke-[2.5]" />
-                Download APK
+                <span>Download APK</span>
               </Button>
               <Button
                 variant="secondary"
                 size="sm"
                 onClick={() => setIsModalOpen(true)}
-                className="gap-1.5 font-mono text-xs h-10 px-3 cursor-pointer"
+                className="gap-1.5 font-mono text-xs h-10 px-3 cursor-pointer whitespace-nowrap"
                 title="Scan QR Code to install on mobile"
               >
                 <QrCode className="h-3.5 w-3.5" />
-                Scan QR
+                <span>Scan QR</span>
               </Button>
             </div>
           </div>
@@ -145,164 +145,193 @@ export const AppDownloadWidget: React.FC<AppDownloadWidgetProps> = ({
   // ─────────────────────────────────────────────────────────────────────────────
   return (
     <>
-      <section className={`rounded-2xl border border-border bg-surface p-8 sm:p-12 relative overflow-hidden ${className}`}>
-        {/* Ambient Radial Lighting */}
+      <div className={`rounded-2xl border border-border bg-surface p-6 sm:p-10 lg:p-12 relative overflow-hidden shadow-sm ${className}`}>
+        {/* Subtle Ambient Lighting */}
         <div className="absolute top-0 right-1/4 w-96 h-96 bg-emerald-500/5 dark:bg-emerald-400/10 rounded-full blur-3xl pointer-events-none" />
+
+        {/* Top Meta Row */}
+        <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border pb-5 mb-8">
+          <div className="flex items-center gap-2.5">
+            <div className="h-8 w-8 rounded-lg bg-surface-elevated border border-border flex items-center justify-center text-ink shrink-0">
+              <Smartphone className="h-4 w-4" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-extrabold text-sm text-ink tracking-tight">Android Companion App</span>
+                <span className="font-mono text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/20">
+                  v1.0.4 APK
+                </span>
+              </div>
+              <p className="text-[11px] text-muted font-sans mt-0.5">Optimized for warehouse aisles & retail store counters</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2.5 text-[11px] font-mono text-muted">
+            <span>Android 9.0+ (ARM64)</span>
+            <span>•</span>
+            <span>24 MB Package</span>
+          </div>
+        </div>
 
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left Text & Actions */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-surface-elevated text-xs font-mono font-medium text-ink shadow-sm">
-              <Smartphone className="h-3.5 w-3.5 text-emerald-500" />
-              <span>Mobile Companion Application</span>
-              <span className="text-[10px] text-muted">• Android APK Preview</span>
+            <div>
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight leading-snug">
+                Wholesale ordering built for physical store realities.
+              </h3>
+              <p className="mt-3 text-sm text-muted leading-relaxed">
+                Equip retail staff and store proprietors to run restock cycles directly from the floor. Parse voice notes in colloquial Hindi, scan GTIN barcodes off empty shelves, and execute cryptographic PayPal Sandbox approvals in one tap.
+              </p>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-ink leading-tight">
-              Procure On The Go — Directly from Your Retail Aisles.
-            </h2>
-
-            <p className="text-sm sm:text-base text-muted leading-relaxed">
-              Don’t stay tied to a desktop counter. Kirana store proprietors and supermarket managers can dictate natural-language chits, scan empty shelf barcodes, and approve PayPal bulk splits straight from their phone.
-            </p>
-
             {/* Feature Matrix */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
-              <div className="flex items-start gap-3 p-3.5 rounded-xl border border-border bg-surface-elevated/50">
-                <div className="h-8 w-8 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                  <Mic className="h-4 w-4" />
-                </div>
-                <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+              <div className="p-3.5 rounded-xl border border-border bg-surface-elevated/40 hover:bg-surface-elevated transition-colors">
+                <div className="flex items-center gap-2.5 mb-1.5">
+                  <div className="h-7 w-7 rounded-md bg-surface border border-border flex items-center justify-center text-ink shrink-0">
+                    <Mic className="h-3.5 w-3.5 text-emerald-500" />
+                  </div>
                   <h4 className="text-xs font-bold text-ink">Vernacular Voice Chits</h4>
-                  <p className="text-[11px] text-muted mt-0.5 font-sans">
-                    Dictate in Hindi, Hinglish, or English. Gemini AI parses items and quantities automatically.
-                  </p>
                 </div>
+                <p className="text-[11px] text-muted leading-relaxed font-sans">
+                  Dictate naturally in Hindi, Hinglish, or English. Gemini AI extracts quantities and SKUs.
+                </p>
               </div>
 
-              <div className="flex items-start gap-3 p-3.5 rounded-xl border border-border bg-surface-elevated/50">
-                <div className="h-8 w-8 rounded-lg bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0">
-                  <ScanLine className="h-4 w-4" />
+              <div className="p-3.5 rounded-xl border border-border bg-surface-elevated/40 hover:bg-surface-elevated transition-colors">
+                <div className="flex items-center gap-2.5 mb-1.5">
+                  <div className="h-7 w-7 rounded-md bg-surface border border-border flex items-center justify-center text-ink shrink-0">
+                    <ScanLine className="h-3.5 w-3.5 text-emerald-500" />
+                  </div>
+                  <h4 className="text-xs font-bold text-ink">Shelf Barcode Scanner</h4>
                 </div>
-                <div>
-                  <h4 className="text-xs font-bold text-ink">Barcode Shelf Scanner</h4>
-                  <p className="text-[11px] text-muted mt-0.5 font-sans">
-                    Camera scanner matches GTIN-13 packaging against 38 indexed regional wholesale distributor SKUs.
-                  </p>
-                </div>
+                <p className="text-[11px] text-muted leading-relaxed font-sans">
+                  Instantly maps GTIN-13 package barcodes to 38 wholesale distributor offers.
+                </p>
               </div>
 
-              <div className="flex items-start gap-3 p-3.5 rounded-xl border border-border bg-surface-elevated/50">
-                <div className="h-8 w-8 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
-                  <Bell className="h-4 w-4" />
+              <div className="p-3.5 rounded-xl border border-border bg-surface-elevated/40 hover:bg-surface-elevated transition-colors">
+                <div className="flex items-center gap-2.5 mb-1.5">
+                  <div className="h-7 w-7 rounded-md bg-surface border border-border flex items-center justify-center text-ink shrink-0">
+                    <Bell className="h-3.5 w-3.5 text-emerald-500" />
+                  </div>
+                  <h4 className="text-xs font-bold text-ink">Supplier Dispatch Alerts</h4>
                 </div>
-                <div>
-                  <h4 className="text-xs font-bold text-ink">Split Dispatch Alerts</h4>
-                  <p className="text-[11px] text-muted mt-0.5 font-sans">
-                    Instant push notifications as sub-orders are accepted by local distributors in Mumbai.
-                  </p>
-                </div>
+                <p className="text-[11px] text-muted leading-relaxed font-sans">
+                  Live status updates as wholesale suppliers accept and dispatch individual sub-lines.
+                </p>
               </div>
 
-              <div className="flex items-start gap-3 p-3.5 rounded-xl border border-border bg-surface-elevated/50">
-                <div className="h-8 w-8 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-                  <ShieldCheck className="h-4 w-4" />
+              <div className="p-3.5 rounded-xl border border-border bg-surface-elevated/40 hover:bg-surface-elevated transition-colors">
+                <div className="flex items-center gap-2.5 mb-1.5">
+                  <div className="h-7 w-7 rounded-md bg-surface border border-border flex items-center justify-center text-ink shrink-0">
+                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
+                  </div>
+                  <h4 className="text-xs font-bold text-ink">Biometric Approvals</h4>
                 </div>
-                <div>
-                  <h4 className="text-xs font-bold text-ink">Biometric 1-Tap Approval</h4>
-                  <p className="text-[11px] text-muted mt-0.5 font-sans">
-                    Secure fingerprint / Face ID sign-off before committing PayPal Sandbox transactions.
-                  </p>
-                </div>
+                <p className="text-[11px] text-muted leading-relaxed font-sans">
+                  Enforces biometric confirmation before locking purchase orders into PayPal Sandbox.
+                </p>
               </div>
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-4">
-              <Button
-                variant="primary"
-                size="lg"
-                onClick={handleDownloadClick}
-                className="gap-2.5 font-bold text-xs h-12 px-6 shadow-sm cursor-pointer"
-              >
-                <Download className="h-4 w-4 stroke-[2.5]" />
-                Download Android APK (v1.0.4)
-              </Button>
-              <Button
-                variant="secondary"
-                size="lg"
-                onClick={() => setIsModalOpen(true)}
-                className="gap-2 font-mono text-xs h-12 px-5 cursor-pointer"
-              >
-                <QrCode className="h-4 w-4" />
-                Scan to Install on Mobile
-              </Button>
-              <span className="text-[11px] font-mono text-muted text-center sm:text-left sm:ml-2">
-                ARM64 · Android 9+ · Free
-              </span>
+            <div className="pt-2 space-y-3">
+              <div className="flex flex-wrap items-center gap-3">
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={handleDownloadClick}
+                  className="gap-2.5 font-bold text-xs h-11 px-5 shadow-sm whitespace-nowrap cursor-pointer shrink-0"
+                >
+                  <Download className="h-4 w-4 shrink-0 stroke-[2.5]" />
+                  <span>Download APK</span>
+                  <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-background/20 text-background shrink-0">v1.0.4</span>
+                </Button>
+
+                <Button
+                  variant="secondary"
+                  size="md"
+                  onClick={() => setIsModalOpen(true)}
+                  className="gap-2 font-mono text-xs h-11 px-4 whitespace-nowrap cursor-pointer shrink-0"
+                >
+                  <QrCode className="h-4 w-4 shrink-0" />
+                  <span>Scan QR Code</span>
+                </Button>
+              </div>
+
+              <div className="flex items-center gap-2 text-[11px] font-mono text-muted">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" />
+                <span>Standalone APK package ready for sideloading · Zero app store delay</span>
+              </div>
             </div>
           </div>
 
           {/* Right Mobile Visual Phone Mockup */}
-          <div className="lg:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-[280px] sm:max-w-[300px]">
-              {/* Outer Phone Shell */}
-              <div className="rounded-[36px] border-4 border-neutral-800 dark:border-neutral-700 bg-background shadow-2xl p-3 relative overflow-hidden">
-                {/* Dynamic Island / Notch */}
-                <div className="w-24 h-4 bg-neutral-800 dark:bg-neutral-700 rounded-full mx-auto mb-3" />
+          <div className="lg:col-span-5 flex justify-center items-center">
+            <div className="relative w-full max-w-[270px]">
+              {/* Adaptive Outer Shell */}
+              <div className="rounded-[36px] border-2 border-border-strong bg-surface shadow-2xl p-3.5 ring-1 ring-border/60 relative overflow-hidden transition-all duration-300">
+                {/* Dynamic Island */}
+                <div className="w-20 h-3.5 bg-border rounded-full mx-auto mb-3" />
 
                 {/* Simulated Screen Content */}
-                <div className="space-y-3 font-sans">
+                <div className="space-y-2.5 font-sans">
                   {/* Header */}
                   <div className="flex items-center justify-between border-b border-border pb-2">
                     <div className="flex items-center gap-1.5">
-                      <img src="/logo.png" alt="ProcurePilot" className="h-5 w-5 object-contain" />
-                      <span className="font-extrabold text-xs text-ink">ProcurePilot</span>
+                      <img src="/logo.png" alt="ProcurePilot" className="h-4 w-4 object-contain" />
+                      <span className="font-extrabold text-[11px] text-ink">ProcurePilot</span>
                     </div>
-                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                    <span className="font-mono text-[9px] text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/10 px-1.5 py-0.5 rounded">
+                      ONLINE
+                    </span>
                   </div>
 
                   {/* Restock Request Card */}
-                  <div className="rounded-xl border border-border bg-surface p-3 space-y-1.5 shadow-xs">
-                    <span className="text-[9px] font-mono text-muted uppercase tracking-wider block">Voice Restock Chit</span>
+                  <div className="rounded-lg border border-border bg-surface-elevated p-2.5 space-y-1">
+                    <div className="flex items-center gap-1 text-[9px] font-mono text-muted">
+                      <Mic className="h-2.5 w-2.5 text-emerald-500" />
+                      <span>VOICE CHIT PARSED</span>
+                    </div>
                     <p className="text-[11px] font-semibold text-ink leading-tight">
-                      "20 Fortune Oil, 30 India Gate Rice under ₹15,000"
+                      "20 Fortune Oil, 30 India Gate Rice"
                     </p>
-                    <div className="flex items-center justify-between pt-1 text-[10px] font-mono text-emerald-600 dark:text-emerald-400">
-                      <span>✓ Knapsack Solved</span>
-                      <span className="font-bold">₹10,240</span>
+                    <div className="flex items-center justify-between pt-1 text-[10px] font-mono">
+                      <span className="text-muted">Total (2 Vendors)</span>
+                      <span className="font-bold text-ink">₹10,240</span>
                     </div>
                   </div>
 
                   {/* Multi-Vendor Sub-Lines */}
-                  <div className="rounded-xl border border-border bg-surface-elevated p-2.5 space-y-1.5 text-[10px]">
-                    <div className="flex items-center justify-between font-bold text-ink">
-                      <span>FMCG Direct Hub</span>
-                      <span>₹5,290</span>
+                  <div className="space-y-1.5 text-[10px]">
+                    <div className="flex items-center justify-between p-2 rounded-md bg-surface-elevated/60 border border-border">
+                      <span className="font-medium text-ink">FMCG Direct Hub</span>
+                      <span className="font-mono font-bold text-ink">₹5,290</span>
                     </div>
-                    <div className="flex items-center justify-between text-muted text-[9px]">
-                      <span>Metro Cash & Carry</span>
-                      <span>₹4,950</span>
+                    <div className="flex items-center justify-between p-2 rounded-md bg-surface-elevated/60 border border-border">
+                      <span className="font-medium text-ink">Metro Cash & Carry</span>
+                      <span className="font-mono font-bold text-ink">₹4,950</span>
                     </div>
                   </div>
 
                   {/* 1-Tap PayPal Button Simulation */}
-                  <div className="rounded-xl bg-ink text-background p-2.5 text-center shadow-xs">
+                  <div className="rounded-lg bg-ink text-background p-2.5 text-center shadow-xs">
                     <div className="text-[10px] font-bold flex items-center justify-center gap-1.5">
                       <ShieldCheck className="h-3 w-3" />
-                      Approve & Settle via PayPal
+                      Approve via PayPal Sandbox
                     </div>
-                    <span className="text-[8px] font-mono opacity-70 block mt-0.5">$116.36 USD Cents</span>
+                    <span className="text-[8px] font-mono opacity-80 block mt-0.5">Authoritative Total: $116.36 USD</span>
                   </div>
                 </div>
 
                 {/* Home Indicator */}
-                <div className="w-28 h-1 bg-neutral-400 dark:bg-neutral-600 rounded-full mx-auto mt-4" />
+                <div className="w-24 h-1 bg-border rounded-full mx-auto mt-4" />
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Modal Dialog */}
       <AppDownloadModal
